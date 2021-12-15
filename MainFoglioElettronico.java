@@ -11,7 +11,7 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-public class MainTestExcel4 
+public class MainFoglioElettronico 
 {
 
 	public static void main(String[] args) 
