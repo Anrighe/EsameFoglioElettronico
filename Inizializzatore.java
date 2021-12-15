@@ -142,8 +142,7 @@ public class Inizializzatore
 					sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] = text;
 					
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaTesto( 
-								matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell, 
-								matrice[table.getSelectedRow()].get(table.getSelectedColumn())));
+								matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell));
 				}
 				
 				if(ritMatcherNumeri == true) //conversione della cella a tipo CellaNumeri
