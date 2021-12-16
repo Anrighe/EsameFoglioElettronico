@@ -1,11 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
-import java.util.List;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,6 +22,7 @@ public class Inizializzatore
 
 	public Inizializzatore()
 	{
+		@SuppressWarnings("unchecked")
 		ArrayList<CellaGenerica> matrice[] = new ArrayList[dim];
 
 		Displayer sottoMatrice = new Displayer(dim);
@@ -34,17 +36,7 @@ public class Inizializzatore
 			}
 		}
 		
-		String nomeRighe[] = new String[dim];
-		
-		for(int i = 0; i < dim; i++)
-		{
-			if (i == 0)
-				nomeRighe[i] = "";
-			else
-				nomeRighe[i] = Integer.toString(i);
-		}
-		
-		String nomeColonne[] = new String[dim];
+		String nomeColonne[] = new String[dim]; //array di stringhe che verrà utilizzato per avere i nomi delle colonne ordinati da lettere
 
 		for(int i = 0; i < dim; i++)
 		{
@@ -59,8 +51,8 @@ public class Inizializzatore
 		{
 			private static final long serialVersionUID = 1L;
 
-			@Override 
-			public boolean isCellEditable(int row, int column)
+			@Override //del metodo isCellEditable di DefaultTableModel
+			public boolean isCellEditable(int row, int column) 
 			{
 				if (column == 0)
 					return false; //Fa in modo che tutte le celle della prima colonna non siano editabili
@@ -69,6 +61,7 @@ public class Inizializzatore
 			}
 		};
 		
+		//configurazione del DefaultTableModel
 		for (int i = 0; i < dim; i++)
 		{
 			for (int j = 0; j < dim; j++)
@@ -85,10 +78,12 @@ public class Inizializzatore
 		
 		//JTextField che mostra la vera operazione che avviene nella cella
 		JTextField operationDisplayer = new JTextField();
-		operationDisplayer.setBackground(new Color(235, 247, 251));
+		operationDisplayer.setBackground(new Color(199, 217, 252));
 		operationDisplayer.setEditable(false);
+		operationDisplayer.setFont(new Font("Calibri", Font.BOLD, 18));
 		
 		JTable table = new JTable(dati);
+		
 		TableModelListener e;
 		table.getModel().addTableModelListener(e = new TableModelListener()
 		{
@@ -112,28 +107,26 @@ public class Inizializzatore
 					Pattern patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$");
 					Matcher matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
-					System.out.println("Operazione: " + ritMatcherOperazione); // stampa true se � un'operazione
+					System.out.println("Operazione: " + ritMatcherOperazione); // stampa true se è un'operazione
 					
 					
-					Pattern patternNumeri = Pattern.compile("^[0-9]+$");
+					Pattern patternNumeri = Pattern.compile("^-{0,1}[0-9]+$");
 					Matcher matcherNumeri = patternNumeri.matcher(text);
 					ritMatcherNumeri = matcherNumeri.find();	
 					System.out.println("Numeri: " + ritMatcherNumeri); // stampa true se sono numeri
 					
 					
-					if (ritMatcherNumeri == false && ritMatcherOperazione == false) //se entra � gi� testo e non � necessario effettuare controlli
+					if (ritMatcherNumeri == false && ritMatcherOperazione == false) //se entra è già testo e non è necessario effettuare controlli
 					{	
 						ritMatcherTesto = true;
 						//Pattern patternTesto = Pattern.compile("^[A-Za-z0-9]+$"); 
 						//Matcher matcherTesto = patternTesto.matcher(text);
-						//System.out.println("Testo: " + matcherTesto.find()); // stampa true se sono lettere
-						System.out.println("Testo : " + ritMatcherTesto);
+						System.out.println("Testo : " + ritMatcherTesto); // stampa true se è testo
 					}
 				}
 				
-				//assegna il valore nella struttura dati
+				//assegna il valore nella struttura dati alla stringa temporanea text
 				matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell = text;
-				
 
 				
 				if (ritMatcherTesto == true) //conversione della cella a tipo CellaTesto
@@ -174,7 +167,7 @@ public class Inizializzatore
 					
 				}
 				
-				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false)
+				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false) //se non è una cella di testo, o una cella numero o una cella operazione allora è una cella vuota e deve essere riconvertita al tipo CellaGenerica
 				{
 					System.out.println("La cella di riga: " + table.getSelectedColumn() + " e colonna: " + table.getSelectedColumn() + " diventa una cella generica");
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaGenerica());
@@ -186,28 +179,16 @@ public class Inizializzatore
 				System.out.println("Contenuto struttura dati:");
 				for (int i = 0; i < dim; ++i)
 					System.out.println(matrice[i]);
-				
-				
-				
-				
-				//TODO: Da revisionare displayOperation
-				//System.out.println("displayText: " + matrice[table.getSelectedRow()].get(table.getSelectedColumn()).displayOperation());
-				
 
-				//operationDisplayer.setText("Riga: " + table.getSelectedRow() + " \tColonna: " + table.getSelectedColumn());
 				operationDisplayer.setText(sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()]);
 			}	
 		});
 		
 		
-		JFrame f = new JFrame("Test Excel 4");
-		f.setLayout(new BorderLayout());
-		
 
 		table.setCellSelectionEnabled(true);
-
-		//table.setSelectionBackground(new Color(166, 166, 166, 0));
-		
+		table.setBackground(new Color(232, 255, 250));
+		table.setRowHeight(20);
 		
 		//setta la prima colonna con background grigio e testo allineato al centro e imposta la barra di scorrimento
 		JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -215,16 +196,11 @@ public class Inizializzatore
 	    setPrimaColonna.setBackground(new Color(238, 238, 238, 255));
 	    setPrimaColonna.setHorizontalAlignment(JLabel.CENTER);
 	    table.getColumnModel().getColumn(0).setCellRenderer(setPrimaColonna);
-	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //JTable must not auto-resize the columns by setting the AUTO_RESIZE_OFF mode
-		
-	    f.add(operationDisplayer, BorderLayout.NORTH);
-	    f.add(sp, BorderLayout.CENTER);
-		
-		f.pack();
-		f.setLocationRelativeTo(null);
 
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setBounds(100, 100, 1280, 600);
-		f.setVisible(true);
+	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //JTable must not auto-resize the columns by setting the AUTO_RESIZE_OFF mode
+	    
+	    Frame finestra = new Frame(operationDisplayer, sp);
+	    finestra.getF().setVisible(true);
+
 	}
 }

@@ -14,14 +14,10 @@ public class CellaOperazione extends CellaGenerica
 	private int rowCell2;
 	private int posSegno;
 	
-
-	private String displayText; 
 	
 	public CellaOperazione(ArrayList<CellaGenerica> matrice[], JTable table, String text)
 	{
 		super();
-		
-		displayText = text;
 		
 		System.out.println("ENTRO IN CONVERSIONE CELLA OPERAZIONE");
 		
@@ -71,11 +67,10 @@ public class CellaOperazione extends CellaGenerica
 			tmp2 = tmp2 + String.valueOf(cell2.charAt(i));
 
 		System.out.println("tmp1: " + tmp1); //tmp1 è ancora String va convertito in int e assegnato a rowCell1
-		System.out.println("tmp2: " + tmp2);
+		System.out.println("tmp2: " + tmp2); //tmp2 è ancora String va convertito in int e assegnato a rowCell2
 		
 		rowCell1 = Integer.valueOf(tmp1);
 		rowCell2 = Integer.valueOf(tmp2);
-		
 
 		System.out.println("cell1: " + cell1); //debug
 		System.out.println("cell2: " + cell2); //debug
@@ -99,13 +94,9 @@ public class CellaOperazione extends CellaGenerica
 		}
 		
 	}
-	/*public String getDisplayer()
-	{
-		return displayText;
-	}*/
 	
 	
-	//ritorna il risultato dell'operazione
+	//converte da intero a stringa il risultato dell'operazione e lo ritorna
 	public String toString()
 	{
 		return String.valueOf(result);

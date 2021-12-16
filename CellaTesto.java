@@ -10,4 +10,9 @@ public class CellaTesto extends CellaGenerica
 		
 		
 	}
+	
+	public String toString()
+	{
+		return contCell;
+	}
 }
