@@ -1,27 +1,36 @@
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.Desktop;
 
 public class Inizializzatore 
 {
@@ -198,10 +207,10 @@ public class Inizializzatore
 		JMenu menuFile = new JMenu("File");
 		
         //Crea gli elementi del menu
-		JMenuItem opzioneMenuFile1 = new JMenuItem("New");
-		JMenuItem opzioneMenuFile2 = new JMenuItem("Open");
-		JMenuItem opzioneMenuFile3 = new JMenuItem("Save As");
-		JMenuItem opzioneMenuFile4 = new JMenuItem("Exit");
+		JMenuItem opzioneMenuFile1 = new JMenuItem("Nuovo");
+		JMenuItem opzioneMenuFile2 = new JMenuItem("Apri");
+		JMenuItem opzioneMenuFile3 = new JMenuItem("Salva con nome");
+		JMenuItem opzioneMenuFile4 = new JMenuItem("Esci");
 		
 
 
@@ -213,10 +222,13 @@ public class Inizializzatore
 
         //barra menu Help
         JMenuBar barraHelp = new JMenuBar();
-        JMenu menuHelp = new JMenu("Help");
-        JMenuItem opzioneMenuHelp1 = new JMenuItem("Documentation");
+        JMenu menuHelp = new JMenu("Aiuto");
+        JMenuItem opzioneMenuHelp1 = new JMenuItem("Documentazione");
+        JMenuItem opzioneMenuHelp2 = new JMenuItem("Traccia d'esame");
         menuHelp.add(opzioneMenuHelp1);
+        menuHelp.add(opzioneMenuHelp2);
         barraHelp.add(menuHelp);
+        
         
         JPanel pannelloNordUpper = new JPanel();
         JPanel pannelloNord = new JPanel();
@@ -254,12 +266,98 @@ public class Inizializzatore
 	    finestra.getF().setVisible(true);
 	    
 	    
+		opzioneMenuFile1.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON NEW");
+		    	finestra.getF().dispose();
+		    	@SuppressWarnings("unused")
+				Inizializzatore foglioElettronico = new Inizializzatore();
+		    }
+		});
+		
+		opzioneMenuFile2.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON OPEN");
+		    	
+		    	JFileChooser fileOpener = new JFileChooser();
+		    	
+		    	
+		    	
+		    	File currentPath = new File(System.getProperty("user.dir"));
+		    	fileOpener.setCurrentDirectory(currentPath);
+		    	fileOpener.setDialogTitle("Open");
+		    	
+		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+		    	{
+		    		
+		    		System.out.println("È stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath());
+		    	}
+		    }
+		});
+	    
+		opzioneMenuFile3.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON SAVE AS");
+		    	
+		    	JFileChooser fileSaver = new JFileChooser();
+		    	
+		    	
+		    	
+		    	File currentPath = new File(System.getProperty("user.dir"));
+		    	fileSaver.setCurrentDirectory(currentPath);
+		    	fileSaver.setDialogTitle("Save As");
+
+		    	fileSaver.setApproveButtonText("Save");
+		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+		    	{
+		    		
+		    		System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath());
+		    	}
+		    	
+		    	
+		    }
+		});
+	    
 		opzioneMenuFile4.addActionListener(new ActionListener() 
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON EXIT");
 		    	finestra.getF().dispose();
+		    }
+		});
+		
+		opzioneMenuHelp2.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON TRACCIA");
+		    	if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) 
+		    	{
+		    	    try 
+		    	    {
+						Desktop.getDesktop().browse(new URI("http://didattica.agentgroup.unimore.it/wiki/images/b/b6/Tesina2122.pdf"));
+					} 
+		    	    catch (IOException e1) 
+		    	    {
+						e1.printStackTrace();
+					} 
+		    	    catch (URISyntaxException e1) 
+		    	    {
+						e1.printStackTrace();
+					}
+		    	}
+		    	else
+		    	{
+		    		String messaggio = "Feature non supportata dal sistema operativo corrente";
+		    		JOptionPane.showMessageDialog(null, messaggio, "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+		    	}
 		    }
 		});
 	    
