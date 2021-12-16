@@ -1,13 +1,19 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -15,6 +21,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class Inizializzatore 
 {
@@ -184,11 +191,54 @@ public class Inizializzatore
 			}	
 		});
 		
+		//barra menu File
+		JMenuBar barraFile = new JMenuBar();
+        
+		//Crea il menu
+		JMenu menuFile = new JMenu("File");
 		
+        //Crea gli elementi del menu
+		JMenuItem opzioneMenuFile1 = new JMenuItem("New");
+		JMenuItem opzioneMenuFile2 = new JMenuItem("Open");
+		JMenuItem opzioneMenuFile3 = new JMenuItem("Save As");
+		JMenuItem opzioneMenuFile4 = new JMenuItem("Exit");
+		
+
+
+        menuFile.add(opzioneMenuFile1);
+        menuFile.add(opzioneMenuFile2);
+        menuFile.add(opzioneMenuFile3);
+        menuFile.add(opzioneMenuFile4);
+        barraFile.add(menuFile);
+
+        //barra menu Help
+        JMenuBar barraHelp = new JMenuBar();
+        JMenu menuHelp = new JMenu("Help");
+        JMenuItem opzioneMenuHelp1 = new JMenuItem("Documentation");
+        menuHelp.add(opzioneMenuHelp1);
+        barraHelp.add(menuHelp);
+        
+        JPanel pannelloNordUpper = new JPanel();
+        JPanel pannelloNord = new JPanel();
+        
+
+        
+        
+        FlowLayout leftAlignment = new FlowLayout();
+        leftAlignment.setAlignment(FlowLayout.LEFT);
+        
+        pannelloNord.setLayout(new BorderLayout());
+        pannelloNordUpper.setLayout(leftAlignment);
+        
+        pannelloNordUpper.add(barraFile);
+        pannelloNordUpper.add(barraHelp);
+        pannelloNord.add(pannelloNordUpper, BorderLayout.NORTH);
+        pannelloNord.add(operationDisplayer, BorderLayout.SOUTH);
+
 
 		table.setCellSelectionEnabled(true);
 		table.setBackground(new Color(232, 255, 250));
-		table.setRowHeight(20);
+		table.setRowHeight(22);
 		
 		//setta la prima colonna con background grigio e testo allineato al centro e imposta la barra di scorrimento
 		JScrollPane sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -196,11 +246,24 @@ public class Inizializzatore
 	    setPrimaColonna.setBackground(new Color(238, 238, 238, 255));
 	    setPrimaColonna.setHorizontalAlignment(JLabel.CENTER);
 	    table.getColumnModel().getColumn(0).setCellRenderer(setPrimaColonna);
-
+	    table.getTableHeader().setReorderingAllowed(false);
+	    
 	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //JTable must not auto-resize the columns by setting the AUTO_RESIZE_OFF mode
 	    
-	    Frame finestra = new Frame(operationDisplayer, sp);
+	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
+	    
+	    
+		opzioneMenuFile4.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON EXIT");
+		    	finestra.getF().dispose();
+		    }
+		});
+	    
+
 
 	}
 }
