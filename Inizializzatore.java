@@ -289,7 +289,8 @@ public class Inizializzatore
 		    	
 		    	File currentPath = new File(System.getProperty("user.dir"));
 		    	fileOpener.setCurrentDirectory(currentPath);
-		    	fileOpener.setDialogTitle("Open");
+		    	fileOpener.setDialogTitle("Apri");
+		    	fileOpener.setApproveButtonText("Apri");
 		    	
 		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
@@ -311,9 +312,9 @@ public class Inizializzatore
 		    	
 		    	File currentPath = new File(System.getProperty("user.dir"));
 		    	fileSaver.setCurrentDirectory(currentPath);
-		    	fileSaver.setDialogTitle("Save As");
+		    	fileSaver.setDialogTitle("Salva con nome");
 
-		    	fileSaver.setApproveButtonText("Save");
+		    	fileSaver.setApproveButtonText("Salva");
 		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
 		    		
@@ -356,7 +357,7 @@ public class Inizializzatore
 		    	else
 		    	{
 		    		String messaggio = "Feature non supportata dal sistema operativo corrente";
-		    		JOptionPane.showMessageDialog(null, messaggio, "InfoBox: " + "Error", JOptionPane.INFORMATION_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
 		    	}
 		    }
 		});
