@@ -196,7 +196,7 @@ public class Inizializzatore
 					System.out.println(matrice[i]);
 
 				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
-				classeCellaSelezionata = "\t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
+				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
 			}	
 		});

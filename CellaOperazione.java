@@ -7,6 +7,7 @@ public class CellaOperazione extends CellaGenerica
 	private int result;
 	private boolean addizione = false;
 	private boolean operazioneValida;
+	private String azioneOperazione;
 	
 	private int colCell1;
 	private int rowCell1;
@@ -52,11 +53,13 @@ public class CellaOperazione extends CellaGenerica
 		{
 			addizione = true;
 			posSegno = plus;
+			azioneOperazione = "sommare";
 		}
 		else //è una sottrazione
 		{
 			addizione = false;
 			posSegno = minus;
+			azioneOperazione = "sottrarre";
 		}
 
 		cell1 = String.valueOf(text.charAt(1));
@@ -123,9 +126,8 @@ public class CellaOperazione extends CellaGenerica
 
 			classeCella2 = rifMatrice[rowCell2-1].get(colCell2).getClass() + "";
 			classeCella2 = classeCella2.substring(6);
+			messaggio = "<html>Impossibile " + azioneOperazione + " due celle di tipo <font color=\"red\">" + classeCella1 + "</font> e " + "<font color=\"red\">" + classeCella2 + "</font>";
 			
-    		messaggio = "<html>Impossibile sommare due celle di tipo <font color=\"red\">" + classeCella1 + "</font> e " + "<font color=\"red\">" + classeCella2 + "</font>";
-
     		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
 			return "Errore";
 		}
