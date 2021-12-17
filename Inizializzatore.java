@@ -68,7 +68,7 @@ public class Inizializzatore
 		{
 			private static final long serialVersionUID = 1L;
 
-			@Override //del metodo isCellEditable di DefaultTableModel
+			@Override //Override del metodo isCellEditable di DefaultTableModel
 			public boolean isCellEditable(int row, int column) 
 			{
 				if (column == 0)

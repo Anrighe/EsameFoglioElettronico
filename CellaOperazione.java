@@ -1,4 +1,3 @@
-import java.text.AttributedString;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -59,12 +58,6 @@ public class CellaOperazione extends CellaGenerica
 			addizione = false;
 			posSegno = minus;
 		}
-		
-		
-		//TODO:
-		//si potrebbe implementare la divisione di righe e colonne degli 
-		//operandi in interi direttamente qua senza passare da sottostringhe
-
 
 		cell1 = String.valueOf(text.charAt(1));
 		cell2 = String.valueOf(text.charAt(posSegno+1));
