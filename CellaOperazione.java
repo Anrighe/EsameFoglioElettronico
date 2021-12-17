@@ -134,7 +134,7 @@ public class CellaOperazione extends CellaGenerica
     		messaggio = "<html>Impossibile sommare due celle di tipo <font color=\"red\">" + classeCella1 + "</font> e " + "<font color=\"red\">" + classeCella2 + "</font>";
 
     		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
-			return "\\033[31mErrore  \\033[0m";
+			return "Errore";
 		}
 	}
 	
