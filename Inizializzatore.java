@@ -35,6 +35,7 @@ import java.awt.Desktop;
 public class Inizializzatore 
 {
 	private int dim = 27;
+	private String classeCellaSelezionata;
 
 	public Inizializzatore()
 	{
@@ -174,13 +175,12 @@ public class Inizializzatore
 					//assegna il valore nella sottomatrice
 					sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] = text;
 					
+					//crea la nuova cella di tipo CellaOperazione
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(),
 							new CellaOperazione(matrice, table, text));
 					
-					//TODO: da revisionare
+					//assegna il dato di ritorno della CellaOperazione al DefaultTableModel
 					dati.setValueAt(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).toString(), table.getSelectedRow(), table.getSelectedColumn());
-
-					
 				}
 				
 				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false) //se non è una cella di testo, o una cella numero o una cella operazione allora è una cella vuota e deve essere riconvertita al tipo CellaGenerica
@@ -189,14 +189,15 @@ public class Inizializzatore
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaGenerica());
 				}
 				
-				
 				System.out.println("Aggiorno il contenuto della cella di riga " + table.getSelectedRow() + " e colonna " + table.getSelectedColumn() + " a: " + text);
 				
 				System.out.println("Contenuto struttura dati:");
 				for (int i = 0; i < dim; ++i)
 					System.out.println(matrice[i]);
 
-				operationDisplayer.setText(sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()]);
+				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
+				classeCellaSelezionata = "\t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
+				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
 			}	
 		});
 		
@@ -308,8 +309,6 @@ public class Inizializzatore
 		    	
 		    	JFileChooser fileSaver = new JFileChooser();
 		    	
-		    	
-		    	
 		    	File currentPath = new File(System.getProperty("user.dir"));
 		    	fileSaver.setCurrentDirectory(currentPath);
 		    	fileSaver.setDialogTitle("Salva con nome");
@@ -317,11 +316,9 @@ public class Inizializzatore
 		    	fileSaver.setApproveButtonText("Salva");
 		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
-		    		
 		    		System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath());
+		    		
 		    	}
-		    	
-		    	
 		    }
 		});
 	    

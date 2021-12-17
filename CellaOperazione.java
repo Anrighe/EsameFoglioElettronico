@@ -1,12 +1,13 @@
+import java.text.AttributedString;
 import java.util.ArrayList;
-
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 public class CellaOperazione extends CellaGenerica
 {
-	public int result;
+	private int result;
 	private boolean addizione = false;
-	private boolean sottrazione = false;
+	private boolean operazioneValida;
 	
 	private int colCell1;
 	private int rowCell1;
@@ -14,6 +15,26 @@ public class CellaOperazione extends CellaGenerica
 	private int rowCell2;
 	private int posSegno;
 	
+	private String classeCella1;
+	private String classeCella2;
+	private String messaggio;
+	
+	private String cell1;
+	private String cell2;
+
+	private String tmp1 = "";
+	private String tmp2 = "";
+
+
+	private ArrayList<CellaGenerica>[] rifMatrice;
+	
+	public boolean isValidOperation(ArrayList<CellaGenerica> matrice[])
+	{	
+		if (matrice[rowCell1-1].get(colCell1).getClass() == CellaNumeri.class && matrice[rowCell2-1].get(colCell2).getClass() == CellaNumeri.class)
+			return true;
+		else
+			return false;
+	}
 	
 	public CellaOperazione(ArrayList<CellaGenerica> matrice[], JTable table, String text)
 	{
@@ -21,12 +42,9 @@ public class CellaOperazione extends CellaGenerica
 		
 		System.out.println("ENTRO IN CONVERSIONE CELLA OPERAZIONE");
 		
-		String cell1;
-		String cell2;
+		rifMatrice = matrice;
+		
 
-
-		String tmp1 = "";
-		String tmp2 = "";
 		
 		int plus = text.indexOf("+");
 		int minus = text.indexOf("-");
@@ -38,7 +56,7 @@ public class CellaOperazione extends CellaGenerica
 		}
 		else //è una sottrazione
 		{
-			sottrazione = true;
+			addizione = false;
 			posSegno = minus;
 		}
 		
@@ -82,24 +100,42 @@ public class CellaOperazione extends CellaGenerica
 		System.out.println("operatore1: " + matrice[rowCell1-1].get(colCell1).getContCell());
 		System.out.println("operatore2: " + matrice[rowCell2-1].get(colCell2).getContCell());
 		
-		if (addizione == true)
-		{
-			result = matrice[rowCell1-1].get(colCell1).getContCell() + matrice[rowCell2-1].get(colCell2).getContCell();
-			System.out.println("Result: " + result);
-		}
-		else
-		{
-			result = matrice[rowCell1-1].get(colCell1).getContCell() - matrice[rowCell2-1].get(colCell2).getContCell();
-			System.out.println("Result: " + result);
-		}
+		operazioneValida = isValidOperation(matrice);
 		
+		if (operazioneValida == true)
+		{
+			if (addizione == true) //l'operazione è un'addizione
+			{
+				result = matrice[rowCell1-1].get(colCell1).getContCell() + matrice[rowCell2-1].get(colCell2).getContCell();
+				System.out.println("Result: " + result);
+			}
+			else //l'operazione è una sottrazione
+			{
+				result = matrice[rowCell1-1].get(colCell1).getContCell() - matrice[rowCell2-1].get(colCell2).getContCell();
+				System.out.println("Result: " + result);
+			}
+		}
 	}
 	
-	
-	//converte da intero a stringa il risultato dell'operazione e lo ritorna
+	//se l'operazione è tra due Celle di numeri ritorna il risultato convertito da intero a stringa
+	//altrimenti gestisce l'errore segnalando quali classi si è cercato di sommare e ritornando la stringa "Errore"
 	public String toString()
 	{
-		return String.valueOf(result);
+		if(operazioneValida == true)
+			return String.valueOf(result);
+		else
+		{
+			classeCella1 = rifMatrice[rowCell1-1].get(colCell1).getClass() + "";
+			classeCella1 = classeCella1.substring(6);
+
+			classeCella2 = rifMatrice[rowCell2-1].get(colCell2).getClass() + "";
+			classeCella2 = classeCella2.substring(6);
+			
+    		messaggio = "<html>Impossibile sommare due celle di tipo <font color=\"red\">" + classeCella1 + "</font> e " + "<font color=\"red\">" + classeCella2 + "</font>";
+
+    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
+			return "\\033[31mErrore  \\033[0m";
+		}
 	}
 	
 }
