@@ -1,36 +1,23 @@
 import java.awt.BorderLayout;
-
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.Desktop;
+
 
 public class Inizializzatore 
 {
@@ -234,8 +221,6 @@ public class Inizializzatore
         JPanel pannelloNordUpper = new JPanel();
         JPanel pannelloNord = new JPanel();
         
-
-        
         
         FlowLayout leftAlignment = new FlowLayout();
         leftAlignment.setAlignment(FlowLayout.LEFT);
@@ -266,100 +251,7 @@ public class Inizializzatore
 	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
 	    
-	    
-		opzioneMenuFile1.addActionListener(new ActionListener() 
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON NEW");
-		    	finestra.getF().dispose();
-		    	@SuppressWarnings("unused")
-				Inizializzatore foglioElettronico = new Inizializzatore();
-		    }
-		});
-		
-		opzioneMenuFile2.addActionListener(new ActionListener() 
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON OPEN");
-		    	
-		    	JFileChooser fileOpener = new JFileChooser();
-		    	
-		    	
-		    	
-		    	File currentPath = new File(System.getProperty("user.dir"));
-		    	fileOpener.setCurrentDirectory(currentPath);
-		    	fileOpener.setDialogTitle("Apri");
-		    	fileOpener.setApproveButtonText("Apri");
-		    	
-		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-		    	{
-		    		
-		    		System.out.println("È stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath());
-		    	}
-		    }
-		});
-	    
-		opzioneMenuFile3.addActionListener(new ActionListener() 
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON SAVE AS");
-		    	
-		    	JFileChooser fileSaver = new JFileChooser();
-		    	
-		    	File currentPath = new File(System.getProperty("user.dir"));
-		    	fileSaver.setCurrentDirectory(currentPath);
-		    	fileSaver.setDialogTitle("Salva con nome");
-
-		    	fileSaver.setApproveButtonText("Salva");
-		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
-		    	{
-		    		System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath());
-		    		
-		    	}
-		    }
-		});
-	    
-		opzioneMenuFile4.addActionListener(new ActionListener() 
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON EXIT");
-		    	finestra.getF().dispose();
-		    }
-		});
-		
-		opzioneMenuHelp2.addActionListener(new ActionListener() 
-		{
-		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON TRACCIA");
-		    	if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) 
-		    	{
-		    	    try 
-		    	    {
-						Desktop.getDesktop().browse(new URI("http://didattica.agentgroup.unimore.it/wiki/images/b/b6/Tesina2122.pdf"));
-					} 
-		    	    catch (IOException e1) 
-		    	    {
-						e1.printStackTrace();
-					} 
-		    	    catch (URISyntaxException e1) 
-		    	    {
-						e1.printStackTrace();
-					}
-		    	}
-		    	else
-		    	{
-		    		String messaggio = "Feature non supportata dal sistema operativo corrente";
-		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
-		    	}
-		    }
-		});
-	    
-
+	    Menu implementaMenu = new Menu(finestra, opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, opzioneMenuHelp1, opzioneMenuHelp2);
 
 	}
 }
