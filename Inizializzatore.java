@@ -1,9 +1,17 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -21,16 +29,17 @@ import java.awt.*;
 
 public class Inizializzatore 
 {
-	private int dim = 27;
+	private final int dim = 27;
 	private String classeCellaSelezionata;
-
+	private ArrayList<CellaGenerica> matrice[];
+	private DefaultTableModel dati;
+	
 	public Inizializzatore()
 	{
 		@SuppressWarnings("unchecked")
-		ArrayList<CellaGenerica> matrice[] = new ArrayList[dim];
 
 		Displayer sottoMatrice = new Displayer(dim);
-		
+		matrice = new ArrayList[dim];
 		for (int i = 0; i < dim; i++)
 		{
 			matrice[i] = new ArrayList<CellaGenerica>();
@@ -51,7 +60,7 @@ public class Inizializzatore
 		}
 
 		
-		DefaultTableModel dati = new DefaultTableModel(nomeColonne, dim)
+		dati = new DefaultTableModel(nomeColonne, dim)
 		{
 			private static final long serialVersionUID = 1L;
 
@@ -87,7 +96,7 @@ public class Inizializzatore
 		operationDisplayer.setFont(new Font("Calibri", Font.BOLD, 18));
 		
 		JTable table = new JTable(dati);
-		
+
 		TableModelListener e;
 		table.getModel().addTableModelListener(e = new TableModelListener()
 		{
@@ -168,6 +177,7 @@ public class Inizializzatore
 					
 					//assegna il dato di ritorno della CellaOperazione al DefaultTableModel
 					dati.setValueAt(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).toString(), table.getSelectedRow(), table.getSelectedColumn());
+					
 				}
 				
 				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false) //se non è una cella di testo, o una cella numero o una cella operazione allora è una cella vuota e deve essere riconvertita al tipo CellaGenerica
@@ -185,6 +195,7 @@ public class Inizializzatore
 				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
 				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
+				
 			}	
 		});
 		
@@ -251,7 +262,9 @@ public class Inizializzatore
 	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
 	    
-	    Menu implementaMenu = new Menu(finestra, opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, opzioneMenuHelp1, opzioneMenuHelp2);
+	    Menu implementaMenu = new Menu(dati, table, finestra, opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, opzioneMenuHelp1, opzioneMenuHelp2, matrice, sottoMatrice);
+	    
 
+	    
 	}
 }

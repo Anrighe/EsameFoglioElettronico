@@ -1,5 +1,7 @@
 public class CellaNumeri  extends CellaGenerica
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int contCell;
 	
 	public int getContCell()
