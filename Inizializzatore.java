@@ -262,7 +262,10 @@ public class Inizializzatore
 	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
 	    
-	    Menu implementaMenu = new Menu(dati, table, finestra, opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, opzioneMenuHelp1, opzioneMenuHelp2, matrice, sottoMatrice);
+	    Menu implementaMenu = new Menu(dim, dati, table, finestra, 
+	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, 
+	    		opzioneMenuHelp1, opzioneMenuHelp2, 
+	    		matrice, sottoMatrice);
 	    
 
 	    
