@@ -5,11 +5,16 @@ public class CellaGenerica implements Serializable
 	
 	private static final long serialVersionUID = 1L;
 	
-	public String contCell;
+	private String contCell;
 
-	public int getContCell()
+	public String getContCell()
 	{
-		return 0;
+		return contCell;
+	}
+	
+	public void setContCell(String text)
+	{
+		contCell = text;
 	}
 	
 	public CellaGenerica() //costruttore
@@ -21,6 +26,11 @@ public class CellaGenerica implements Serializable
 	public String toString()
 	{
 		return "";
+	}
+
+	public int getContCellInt() 
+	{
+		return 0;
 	}
 	
 

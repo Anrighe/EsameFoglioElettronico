@@ -2,21 +2,22 @@ public class CellaNumeri  extends CellaGenerica
 {
 	private static final long serialVersionUID = 1L;
 	
-	private int contCell;
+	private int contCellInt;
 	
-	public int getContCell()
+	@Override
+	public int getContCellInt()
 	{
-		return contCell;
+		return contCellInt;
 	}
 	
 	public CellaNumeri(String cont) //costruttore
 	{
 		super();
-        contCell = Integer.parseInt(cont); //conversione da String a int	
+        contCellInt = Integer.parseInt(cont); //conversione da String a int	
 	}
 	
 	public String toString()
 	{
-		return contCell + "";
+		return contCellInt + "";
 	}
 }

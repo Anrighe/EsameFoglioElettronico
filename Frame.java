@@ -23,9 +23,9 @@ public class Frame
 
 		
 		f.pack();
+		f.setBounds(100, 100, 1280, 720);
 		f.setLocationRelativeTo(null);
 
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setBounds(100, 100, 1280, 720);
 	}
 }

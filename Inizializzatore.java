@@ -34,9 +34,9 @@ public class Inizializzatore
 	private ArrayList<CellaGenerica> matrice[];
 	private DefaultTableModel dati;
 	
+	@SuppressWarnings("unchecked")
 	public Inizializzatore()
 	{
-		@SuppressWarnings("unchecked")
 
 		Displayer sottoMatrice = new Displayer(dim);
 		matrice = new ArrayList[dim];
@@ -139,7 +139,7 @@ public class Inizializzatore
 				}
 				
 				//assegna il valore nella struttura dati alla stringa temporanea text
-				matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell = text;
+				matrice[table.getSelectedRow()].get(table.getSelectedColumn()).setContCell(text);
 
 				
 				if (ritMatcherTesto == true) //conversione della cella a tipo CellaTesto
@@ -148,7 +148,7 @@ public class Inizializzatore
 					sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] = text;
 					
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaTesto( 
-								matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell));
+								matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
 				}
 				
 				if(ritMatcherNumeri == true) //conversione della cella a tipo CellaNumeri
@@ -161,7 +161,7 @@ public class Inizializzatore
 					
 
 					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA");
-					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).contCell));
+					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
 					
 					
 				}
@@ -262,12 +262,9 @@ public class Inizializzatore
 	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
 	    
-	    Menu implementaMenu = new Menu(dim, dati, table, finestra, 
+	    new Menu(dim, dati, table, finestra, 
 	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, 
 	    		opzioneMenuHelp1, opzioneMenuHelp2, 
 	    		matrice, sottoMatrice);
-	    
-
-	    
 	}
 }

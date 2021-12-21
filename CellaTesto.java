@@ -5,11 +5,11 @@ public class CellaTesto extends CellaGenerica
 	public CellaTesto(String cont)
 	{
 		super();
-		contCell = cont;		
+		super.setContCell(cont);		
 	}
 	
 	public String toString()
 	{
-		return contCell;
+		return super.getContCell();
 	}
 }

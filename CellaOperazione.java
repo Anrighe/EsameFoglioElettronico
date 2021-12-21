@@ -102,12 +102,12 @@ public class CellaOperazione extends CellaGenerica
 		{
 			if (addizione == true) //l'operazione è un'addizione
 			{
-				result = matrice[rowCell1-1].get(colCell1).getContCell() + matrice[rowCell2-1].get(colCell2).getContCell();
+				result = matrice[rowCell1-1].get(colCell1).getContCellInt() + matrice[rowCell2-1].get(colCell2).getContCellInt();
 				System.out.println("Result: " + result);
 			}
 			else //l'operazione è una sottrazione
 			{
-				result = matrice[rowCell1-1].get(colCell1).getContCell() - matrice[rowCell2-1].get(colCell2).getContCell();
+				result = matrice[rowCell1-1].get(colCell1).getContCellInt() - matrice[rowCell2-1].get(colCell2).getContCellInt();
 				System.out.println("Result: " + result);
 			}
 		}
