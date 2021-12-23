@@ -44,8 +44,6 @@ public class CellaOperazione extends CellaGenerica
 		
 		rifMatrice = matrice;
 		
-
-		
 		int plus = text.indexOf("+");
 		int minus = text.indexOf("-");
 				

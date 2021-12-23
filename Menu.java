@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 
 import javax.swing.table.DefaultTableModel;
@@ -29,8 +27,12 @@ public class Menu
 	private ObjectInputStream ois;
 	private FileInputStream fis2;
 	private ObjectInputStream ois2;
+	
+	private FileOutputStream fos;
+	private ObjectOutputStream oos;
+	private FileOutputStream fos2;
+	private ObjectOutputStream oos2;
 
-	private boolean sovrascrivere = false;
 	
 	public Menu(int dim, DefaultTableModel dati, JTable table, Frame finestra, 
 			JMenuItem opzioneMenuFile1, JMenuItem opzioneMenuFile2, 
@@ -127,7 +129,6 @@ public class Menu
 		    	}
 		    }
 		});
-
 	    
 		opzioneMenuFile3.addActionListener(new ActionListener() 
 		{
@@ -140,12 +141,11 @@ public class Menu
 		    	File currentPath = new File(System.getProperty("user.dir"));
 		    	fileSaver.setCurrentDirectory(currentPath);
 		    	fileSaver.setDialogTitle("Salva con nome");
-
 		    	fileSaver.setApproveButtonText("Salva");
+		    	
 		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
 		    		boolean esisteFileMatrice = new File("sovrascrittura").exists();
-
 		    		
 		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile());
 		    		
@@ -162,82 +162,27 @@ public class Menu
 							public void actionPerformed(ActionEvent e) 
 							{
 								System.out.println("PREMUTO SI");
-								sovrascrivere = true;
 								promptConferma.getPopUpConferma().dispose();
-				    			FileOutputStream fos;
-				    			ObjectOutputStream oos;
-				    			FileOutputStream fos2;
-				    			ObjectOutputStream oos2;
-				    			try 
-				    			{
-				    				System.out.println("SOVRASCRIVO");
-				    				fos = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath());
-				    				oos = new ObjectOutputStream(fos);
-				    				oos.writeObject(matrice);
-				    				oos.close();
-				    				
-				    				fos2 = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
-				    				oos2 = new ObjectOutputStream(fos2);
-				    				oos2.writeObject(sottoMatrice);
-				    				oos2.close();
-				    				
-				    			} 
-				    			
-				    			catch (FileNotFoundException e1) 
-				    			{
-				    				e1.printStackTrace();
-				    			}
-				    			catch (IOException e1) 
-				    			{
-				    				e1.printStackTrace();
-				    			}
+
+								System.out.println("SOVRASCRIVO");
+								salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
 							}
-		    				
 		    			});
 		    			
 		    			promptConferma.getBottoneNo().addActionListener(new ActionListener()
 		    			{
-
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
 								System.out.println("PREMUTO NO");
-								sovrascrivere = false;
 								promptConferma.getPopUpConferma().dispose();
-								
 							}
-		    				
 		    			});
 		    		}
 		    		else
 		    		{
 		    			System.out.println("ENTRO ELSE SALVATAGGIO");
-		    			FileOutputStream fos;
-		    			ObjectOutputStream oos;
-		    			FileOutputStream fos2;
-		    			ObjectOutputStream oos2;
-		    			try 
-		    			{
-		    				fos = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath());
-		    				oos = new ObjectOutputStream(fos);
-		    				oos.writeObject(matrice);
-		    				oos.close();
-		    				
-		    				fos2 = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
-		    				oos2 = new ObjectOutputStream(fos2);
-		    				oos2.writeObject(sottoMatrice);
-		    				oos2.close();
-		    				
-		    			} 
-		    			
-		    			catch (FileNotFoundException e1) 
-		    			{
-		    				e1.printStackTrace();
-		    			}
-		    			catch (IOException e1) 
-		    			{
-		    				e1.printStackTrace();
-		    			}
+		    			salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
 		    			System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath());
 		    		}
 		    	}
@@ -281,6 +226,33 @@ public class Menu
 		    }
 		});
 
+	}
+	
+	//Salva la matrice e la sottomatrice su file binari aventi i nomi e i path specificati nel JFileChoser
+	public void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
+			ArrayList<CellaGenerica> matrice[], Displayer sottoMatrice, JFileChooser fileSaver)
+	{
+		try 
+		{
+			fos = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath());
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(matrice);
+			oos.close();
+			
+			fos2 = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
+			oos2 = new ObjectOutputStream(fos2);
+			oos2.writeObject(sottoMatrice);
+			oos2.close();
+		}
+		catch (FileNotFoundException e1) 
+		{
+			e1.printStackTrace();
+		}
+		catch (IOException e1) 
+		{
+			e1.printStackTrace();
+		}
+		
 	}
 	
 	
