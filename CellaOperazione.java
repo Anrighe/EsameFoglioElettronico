@@ -4,6 +4,8 @@ import javax.swing.JTable;
 
 public class CellaOperazione extends CellaGenerica
 {
+	private static final long serialVersionUID = 1L;
+	
 	private int result;
 	private boolean addizione = false;
 	private boolean operazioneValida;

@@ -16,8 +16,6 @@ public class Conferma
 	private JButton bottoneNo;
 	
 	
-	
-	
 	public JFrame getPopUpConferma()
 	{
 		return popUpConferma;

@@ -16,23 +16,22 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
 public class Menu 
-{
-	//ArrayList di appoggio usato per copiare la matrice originale completamente da file binario
-	private ArrayList<CellaGenerica> newMatrice[];
+{		
+	private File currentPath;
 	
-	//sottomatrice d'appoggio per copiare quella da caricare
-	private Displayer sottoMatriceTmp;
+	private JFileChooser fileOpener;
 	
 	private FileInputStream fis;
 	private ObjectInputStream ois;
 	private FileInputStream fis2;
 	private ObjectInputStream ois2;
 	
+	private JFileChooser fileSaver;
+	
 	private FileOutputStream fos;
 	private ObjectOutputStream oos;
 	private FileOutputStream fos2;
 	private ObjectOutputStream oos2;
-
 	
 	public Menu(int dim, DefaultTableModel dati, JTable table, Frame finestra, 
 			JMenuItem opzioneMenuFile1, JMenuItem opzioneMenuFile2, 
@@ -57,9 +56,9 @@ public class Menu
 		    {
 		    	System.out.println("BUTTON OPEN");
 		    	
-		    	JFileChooser fileOpener = new JFileChooser();
+		    	fileOpener = new JFileChooser();
 		    	
-		    	File currentPath = new File(System.getProperty("user.dir"));
+		    	currentPath = new File(System.getProperty("user.dir"));
 		    	
 		    	fileOpener.setCurrentDirectory(currentPath);
 		    	fileOpener.setDialogTitle("Apri");
@@ -78,6 +77,8 @@ public class Menu
 						for (int i = 0; i < dim; ++i)
 							System.out.println(matrice[i]);
 
+						//ArrayList di appoggio usato per copiare la matrice originale completamente da file binario
+						@SuppressWarnings("unchecked")
 						ArrayList<CellaGenerica> newMatrice[] = (ArrayList<CellaGenerica>[]) ois.readObject();
 						
 						for (int i = 0; i < dim; ++i)
@@ -104,6 +105,8 @@ public class Menu
 						
 						fis2 = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
 						ois2 = new ObjectInputStream(fis2);
+						
+						//sottomatrice d'appoggio per copiare quella da caricare
 						Displayer sottoMatriceTmp = (Displayer) ois2.readObject();
 						
 						for (int i = 0; i < dim; ++i)
@@ -136,9 +139,9 @@ public class Menu
 		    {
 		    	System.out.println("BUTTON SAVE AS");
 		    	
-		    	JFileChooser fileSaver = new JFileChooser();
+		    	fileSaver = new JFileChooser();
 		    	
-		    	File currentPath = new File(System.getProperty("user.dir"));
+		    	currentPath = new File(System.getProperty("user.dir"));
 		    	fileSaver.setCurrentDirectory(currentPath);
 		    	fileSaver.setDialogTitle("Salva con nome");
 		    	fileSaver.setApproveButtonText("Salva");
@@ -229,11 +232,11 @@ public class Menu
 	}
 	
 	//Salva la matrice e la sottomatrice su file binari aventi i nomi e i path specificati nel JFileChoser
-	public void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
+	public synchronized void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
 			ArrayList<CellaGenerica> matrice[], Displayer sottoMatrice, JFileChooser fileSaver)
 	{
 		try 
-		{
+		{			
 			fos = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath());
 			oos = new ObjectOutputStream(fos);
 			oos.writeObject(matrice);
@@ -254,6 +257,4 @@ public class Menu
 		}
 		
 	}
-	
-	
 }

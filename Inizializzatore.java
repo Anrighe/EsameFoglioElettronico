@@ -1,17 +1,9 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -25,6 +17,11 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 
 public class Inizializzatore 
@@ -33,11 +30,15 @@ public class Inizializzatore
 	private String classeCellaSelezionata;
 	private ArrayList<CellaGenerica> matrice[];
 	private DefaultTableModel dati;
+	private JTextField operationDisplayer;
+	private JTable table;
+	
+	private boolean threadCreato = false;
+	private int timerAutosalvataggio = 20;
 	
 	@SuppressWarnings("unchecked")
 	public Inizializzatore()
 	{
-
 		Displayer sottoMatrice = new Displayer(dim);
 		matrice = new ArrayList[dim];
 		for (int i = 0; i < dim; i++)
@@ -90,13 +91,14 @@ public class Inizializzatore
 		}
 		
 		//JTextField che mostra la vera operazione che avviene nella cella
-		JTextField operationDisplayer = new JTextField();
+		operationDisplayer = new JTextField();
 		operationDisplayer.setBackground(new Color(199, 217, 252));
 		operationDisplayer.setEditable(false);
 		operationDisplayer.setFont(new Font("Calibri", Font.BOLD, 18));
 		
-		JTable table = new JTable(dati);
+		table = new JTable(dati);
 
+		@SuppressWarnings("unused")
 		TableModelListener e;
 		table.getModel().addTableModelListener(e = new TableModelListener()
 		{
@@ -196,6 +198,50 @@ public class Inizializzatore
 				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
 				
+				
+				if (threadCreato == false)
+				{
+					threadCreato = true;
+					
+				    //variabile usata per ottenere il percorso assoluto corrente
+				    File percorsoCorrente = new File("");
+				    
+				    Runnable salvataggioAutomatico = new Runnable() 
+				    {
+				        public void run() 
+				        {
+				            System.out.println("SALVATAGGIO AUTOMATICO");
+				            System.out.println(percorsoCorrente.getAbsolutePath());
+				            //topMenu.salvataggio(topMenu.getFos(), topMenu.getOos(), topMenu.getFos2(), topMenu.getOos2(), matrice, sottoMatrice, topMenu.getFileSaver(), file.getAbsolutePath()+"\\temp");
+				    		
+				            try 
+				    		{
+				            	System.out.println("ENTRO TRY CATCH AUTOSAVE");
+				            	
+				            	FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
+				    			ObjectOutputStream oos = new ObjectOutputStream(fos);
+				    			oos.writeObject(matrice);
+				    			oos.close();
+				            	
+				    			
+				            	FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottomatrice");
+				    			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
+				    			oos2.writeObject(sottoMatrice);
+				    			oos2.close();
+				    		}
+				    		catch (FileNotFoundException e1) 
+				    		{
+				    			e1.printStackTrace();
+				    		}
+				    		catch (IOException e1) 
+				    		{
+				    			e1.printStackTrace();
+				    		}
+				        }
+				    };
+				    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+				    executor.scheduleAtFixedRate(salvataggioAutomatico, 0, timerAutosalvataggio, TimeUnit.SECONDS);
+				}
 			}	
 		});
 		
@@ -211,9 +257,7 @@ public class Inizializzatore
 		JMenuItem opzioneMenuFile3 = new JMenuItem("Salva con nome");
 		JMenuItem opzioneMenuFile4 = new JMenuItem("Esci");
 		
-
-
-        menuFile.add(opzioneMenuFile1);
+		menuFile.add(opzioneMenuFile1);
         menuFile.add(opzioneMenuFile2);
         menuFile.add(opzioneMenuFile3);
         menuFile.add(opzioneMenuFile4);
@@ -227,11 +271,9 @@ public class Inizializzatore
         menuHelp.add(opzioneMenuHelp1);
         menuHelp.add(opzioneMenuHelp2);
         barraHelp.add(menuHelp);
-        
-        
+           
         JPanel pannelloNordUpper = new JPanel();
         JPanel pannelloNord = new JPanel();
-        
         
         FlowLayout leftAlignment = new FlowLayout();
         leftAlignment.setAlignment(FlowLayout.LEFT);
@@ -257,6 +299,8 @@ public class Inizializzatore
 	    table.getColumnModel().getColumn(0).setCellRenderer(setPrimaColonna);
 	    table.getTableHeader().setReorderingAllowed(false);
 	    
+	    table.getColumnModel().getColumn(0).setMaxWidth(30);
+	    
 	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //JTable must not auto-resize the columns by setting the AUTO_RESIZE_OFF mode
 	    
 	    Frame finestra = new Frame(pannelloNord, sp);
@@ -266,5 +310,11 @@ public class Inizializzatore
 	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, 
 	    		opzioneMenuHelp1, opzioneMenuHelp2, 
 	    		matrice, sottoMatrice);
+	    
+
+	    
+	    
+
+	    
 	}
 }
