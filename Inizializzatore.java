@@ -30,29 +30,50 @@ import java.io.ObjectOutputStream;
  */ 
 public class Inizializzatore 
 {
+	/** Dimensione di altezza e larghezza del foglio elettronico */
+	private final int dim = 27;
 	
-	private final int dim = 27; /** Dimensione di altezza e larghezza del foglio elettronico*/
+	/** Memorizza il tipo della classe della cella selezionata nel JTable */
 	private String classeCellaSelezionata;
 	
-	/** Struttura dati <b>primaria</b> utilizzata per l'effettivo contenuto di una cella dopo le modifiche apportate alla JTable*/	
+	/** Struttura dati <b>primaria</b> utilizzata per l'effettivo contenuto di una cella dopo le modifiche apportate alla JTable */	
 	private ArrayList<CellaGenerica> matrice[];
 	
 	/** Struttura dati <b>secondaria</b> utilizzata per memorizzare cos'era precedentemente una cella.
 	 * 	<p>Nel caso di una cella di tipo operazione memorizza la stringa che ha determinato un risultato</p> */
 	private Displayer sottoMatrice; 
 	
-	private String nomeColonne[]; /** Array che verra' utilizzato per avere i nomi delle colonne del DefaultTableModel ordinati da lettere*/
+	/** Array utilizzato per impostare i nomi delle colonne del DefaultTableModel a lettere ordinate alfabeticamente */
+	private String nomeColonne[];
+	
 	private DefaultTableModel dati;
+	
+	/** Mostra l'operazione effettuata e il tipo della cella selezionata */
 	private JTextField operationDisplayer;
+	
 	private JTable table;
 	
-	/** 
-	 * Variabile che monitora se e' gia' stato creato un thread
-	 */
-	private boolean threadCreato = false;
+	/** Listener per l'avvenuta modifica del JTable*/
+	@SuppressWarnings("unused")
+	private TableModelListener listenerModifica; 
 	
-	private final int timerAutosalvataggio = 30;
-	private File percorsoCorrente;
+	/** True se la cella e' di tipo <b>CellaTesto</b> */
+	private boolean ritMatcherTesto = false; 
+	
+	/** True se la cella e' di tipo <b>CellaNumeri</b> */
+	private boolean ritMatcherNumeri = false; 
+	
+	/** True se la cella e' di tipo <b>CellaOperazione</b> */
+	private boolean ritMatcherOperazione = false; 
+	
+	/** Monitora che monitora se e' gia' stato creato un thread */
+	private boolean threadCreato = false; 
+	
+	/** Intervallo di secondi che separa ogni salvataggio automatico */
+	private final int timerAutosalvataggio = 30; 
+	
+	/** Usata per ottenere l'attuale percorso assoluto */
+	private File percorsoCorrente; 
 	
 	/** Costruttore che inizializza tutte le componenti del foglio elettronico.
 	 * <p>- Istanzia un oggetto per la struttura dati principale [<b>matrice</b>] e per quella secondaria [<b>sottomatrice</b>]</p>
@@ -117,7 +138,7 @@ public class Inizializzatore
 			}
 		}
 		
-		//JTextField che mostra la vera operazione che avviene nella cella
+		//Configurazione dell'operationDisplayer
 		operationDisplayer = new JTextField();
 		operationDisplayer.setBackground(new Color(199, 217, 252));
 		operationDisplayer.setEditable(false);
@@ -125,24 +146,20 @@ public class Inizializzatore
 		
 		table = new JTable(dati);
 
-		@SuppressWarnings("unused")
-		TableModelListener e;
-		table.getModel().addTableModelListener(e = new TableModelListener()
+		table.getModel().addTableModelListener(listenerModifica = new TableModelListener()
 		{
-			public void tableChanged(TableModelEvent e) 
+			public void tableChanged(TableModelEvent listenerModifica) 
 			{
-				System.out.println("Contenuto cella modificato: " + table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()));
+				System.out.println("Contenuto cella modificato: " + table.getValueAt(table.getSelectedRow(), table.getSelectedColumn())); //debug
 				
 				System.out.println("RIGA SELEZIONATA: " + table.getSelectedRow()); //debug
 				System.out.println("COLONNA SELEZIONATA: " + table.getSelectedColumn()); //debug
 				
+				/** Cattura il testo inserito in una cella del JTable */
 				String text;
 				text = (String) table.getValueAt(table.getSelectedRow(), table.getSelectedColumn());
-				System.out.println("text: " + text); //debug
 				
-				boolean ritMatcherOperazione = false;
-				boolean ritMatcherNumeri = false;
-				boolean ritMatcherTesto = false;
+				System.out.println("text: " + text); //debug
 				
 				if (!text.equals(""))
 				{
