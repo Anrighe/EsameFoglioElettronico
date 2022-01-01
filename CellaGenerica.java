@@ -20,7 +20,6 @@ public class CellaGenerica implements Serializable
 	public CellaGenerica() //costruttore
 	{
 		contCell = "";
-
 	}
 	
 	public String toString()

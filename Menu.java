@@ -210,7 +210,7 @@ public class Menu
 		    	
 		    	Desktop desktop = Desktop.getDesktop();
 		    	File path = new File("");
-		    	File docPath = new File(path.getAbsolutePath() + "\\documentazionex.pdf");
+		    	File docPath = new File(path.getAbsolutePath() + "\\doc\\allclasses-index.html");
 		    	try 
 		    	{
 					desktop.open(docPath);
@@ -261,7 +261,7 @@ public class Menu
 	}
 	
 	//Salva la matrice e la sottomatrice su file binari aventi i nomi e i path specificati nel JFileChoser
-	public synchronized void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
+	public void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
 			ArrayList<CellaGenerica> matrice[], Displayer sottoMatrice, JFileChooser fileSaver)
 	{
 		try 
@@ -284,6 +284,5 @@ public class Menu
 		{
 			e1.printStackTrace();
 		}
-		
 	}
 }

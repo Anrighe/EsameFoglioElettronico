@@ -23,25 +23,47 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-
+/**	Classe che gestisce la creazione le componenti del foglio elettronico
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class Inizializzatore 
 {
-	private final int dim = 27;
+	
+	private final int dim = 27; /** Dimensione di altezza e larghezza del foglio elettronico*/
 	private String classeCellaSelezionata;
+	
+	/** Struttura dati <b>primaria</b> utilizzata per l'effettivo contenuto di una cella dopo le modifiche apportate alla JTable*/	
 	private ArrayList<CellaGenerica> matrice[];
+	
+	/** Struttura dati <b>secondaria</b> utilizzata per memorizzare cos'era precedentemente una cella.
+	 * 	<p>Nel caso di una cella di tipo operazione memorizza la stringa che ha determinato un risultato</p> */
+	private Displayer sottoMatrice; 
+	
+	private String nomeColonne[]; /** Array che verra' utilizzato per avere i nomi delle colonne del DefaultTableModel ordinati da lettere*/
 	private DefaultTableModel dati;
 	private JTextField operationDisplayer;
 	private JTable table;
 	
+	/** 
+	 * Variabile che monitora se e' gia' stato creato un thread
+	 */
 	private boolean threadCreato = false;
+	
 	private final int timerAutosalvataggio = 30;
 	private File percorsoCorrente;
 	
+	/** Costruttore che inizializza tutte le componenti del foglio elettronico.
+	 * <p>- Istanzia un oggetto per la struttura dati principale [<b>matrice</b>] e per quella secondaria [<b>sottomatrice</b>]</p>
+	 * <p>- Configura ed istanzia il DefaultTableModel [<b>dati</b>]</p>
+	 * <p></p>
+	 */
 	@SuppressWarnings("unchecked")
 	public Inizializzatore()
 	{
-		Displayer sottoMatrice = new Displayer(dim);
 		matrice = new ArrayList[dim];
+		sottoMatrice = new Displayer(dim);
 		for (int i = 0; i < dim; i++)
 		{
 			matrice[i] = new ArrayList<CellaGenerica>();
@@ -51,8 +73,7 @@ public class Inizializzatore
 			}
 		}
 		
-		//array di stringhe che verrà utilizzato per avere i nomi delle colonne ordinati da lettere
-		String nomeColonne[] = new String[dim]; 
+		nomeColonne = new String[dim]; 
 
 		for(int i = 0; i < dim; i++)
 		{
@@ -62,12 +83,16 @@ public class Inizializzatore
 				nomeColonne[i] = String.valueOf((char)(64 + i));
 		}
 
-		
 		dati = new DefaultTableModel(nomeColonne, dim)
 		{
 			private static final long serialVersionUID = 1L;
 
-			@Override //Override del metodo isCellEditable di DefaultTableModel
+			/** Imposta la prima colonna del DefaultTableModel come non modificabile
+			 * @Override Override del metodo isCellEditable di DefaultTableModel
+			 * @param row indice di colonna
+			 * @param column indice di colonna
+			 * @return true se si trova nella prima colonna, false altrimenti
+			 */
 			public boolean isCellEditable(int row, int column) 
 			{
 				if (column == 0)
@@ -163,10 +188,8 @@ public class Inizializzatore
 						sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] = text;
 					}
 					
-
 					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA"); //debug
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
-					
 					
 				}
 				
@@ -219,7 +242,7 @@ public class Inizializzatore
 				    		{
 				            	System.out.println("ENTRO TRY CATCH AUTOSAVE");
 				            	
-				            	//salvataggio la sstruttura dati principale su file binario con suffisso ".autosave"
+				            	//salvataggio la struttura dati principale su file binario con suffisso ".autosave"
 				            	FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
 				    			ObjectOutputStream oos = new ObjectOutputStream(fos);
 				    			oos.writeObject(matrice);
