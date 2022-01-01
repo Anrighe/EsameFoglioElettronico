@@ -34,7 +34,8 @@ public class Inizializzatore
 	private JTable table;
 	
 	private boolean threadCreato = false;
-	private int timerAutosalvataggio = 20;
+	private final int timerAutosalvataggio = 30;
+	private File percorsoCorrente;
 	
 	@SuppressWarnings("unchecked")
 	public Inizializzatore()
@@ -50,7 +51,8 @@ public class Inizializzatore
 			}
 		}
 		
-		String nomeColonne[] = new String[dim]; //array di stringhe che verrà utilizzato per avere i nomi delle colonne ordinati da lettere
+		//array di stringhe che verrà utilizzato per avere i nomi delle colonne ordinati da lettere
+		String nomeColonne[] = new String[dim]; 
 
 		for(int i = 0; i < dim; i++)
 		{
@@ -106,12 +108,12 @@ public class Inizializzatore
 			{
 				System.out.println("Contenuto cella modificato: " + table.getValueAt(table.getSelectedRow(), table.getSelectedColumn()));
 				
-				System.out.println("RIGA SELEZIONATA: " + table.getSelectedRow());
-				System.out.println("COLONNA SELEZIONATA: " + table.getSelectedColumn());
+				System.out.println("RIGA SELEZIONATA: " + table.getSelectedRow()); //debug
+				System.out.println("COLONNA SELEZIONATA: " + table.getSelectedColumn()); //debug
 				
 				String text;
 				text = (String) table.getValueAt(table.getSelectedRow(), table.getSelectedColumn());
-				System.out.println("text: " + text);
+				System.out.println("text: " + text); //debug
 				
 				boolean ritMatcherOperazione = false;
 				boolean ritMatcherNumeri = false;
@@ -122,13 +124,13 @@ public class Inizializzatore
 					Pattern patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$");
 					Matcher matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
-					System.out.println("Operazione: " + ritMatcherOperazione); // stampa true se è un'operazione
+					System.out.println("Operazione: " + ritMatcherOperazione); //debug: stampa true se è un'operazione
 					
 					
 					Pattern patternNumeri = Pattern.compile("^-{0,1}[0-9]+$");
 					Matcher matcherNumeri = patternNumeri.matcher(text);
 					ritMatcherNumeri = matcherNumeri.find();	
-					System.out.println("Numeri: " + ritMatcherNumeri); // stampa true se sono numeri
+					System.out.println("Numeri: " + ritMatcherNumeri); //debug: stampa true se sono numeri
 					
 					
 					if (ritMatcherNumeri == false && ritMatcherOperazione == false) //se entra è già testo e non è necessario effettuare controlli
@@ -136,7 +138,7 @@ public class Inizializzatore
 						ritMatcherTesto = true;
 						//Pattern patternTesto = Pattern.compile("^[A-Za-z0-9]+$"); 
 						//Matcher matcherTesto = patternTesto.matcher(text);
-						System.out.println("Testo : " + ritMatcherTesto); // stampa true se è testo
+						System.out.println("Testo : " + ritMatcherTesto); //debug: stampa true se è testo
 					}
 				}
 				
@@ -162,7 +164,7 @@ public class Inizializzatore
 					}
 					
 
-					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA");
+					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA"); //debug
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
 					
 					
@@ -184,13 +186,13 @@ public class Inizializzatore
 				
 				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false) //se non è una cella di testo, o una cella numero o una cella operazione allora è una cella vuota e deve essere riconvertita al tipo CellaGenerica
 				{
-					System.out.println("La cella di riga: " + table.getSelectedColumn() + " e colonna: " + table.getSelectedColumn() + " diventa una cella generica");
+					System.out.println("La cella di riga: " + table.getSelectedColumn() + " e colonna: " + table.getSelectedColumn() + " diventa una cella generica"); //debug
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaGenerica());
 				}
 				
-				System.out.println("Aggiorno il contenuto della cella di riga " + table.getSelectedRow() + " e colonna " + table.getSelectedColumn() + " a: " + text);
+				System.out.println("Aggiorno il contenuto della cella di riga " + table.getSelectedRow() + " e colonna " + table.getSelectedColumn() + " a: " + text); //debug
 				
-				System.out.println("Contenuto struttura dati:");
+				System.out.println("Contenuto struttura dati:"); //debug
 				for (int i = 0; i < dim; ++i)
 					System.out.println(matrice[i]);
 
@@ -204,26 +206,26 @@ public class Inizializzatore
 					threadCreato = true;
 					
 				    //variabile usata per ottenere il percorso assoluto corrente
-				    File percorsoCorrente = new File("");
+				    percorsoCorrente = new File("");
 				    
 				    Runnable salvataggioAutomatico = new Runnable() 
 				    {
 				        public void run() 
 				        {
-				            System.out.println("SALVATAGGIO AUTOMATICO");
-				            System.out.println(percorsoCorrente.getAbsolutePath());
-				            //topMenu.salvataggio(topMenu.getFos(), topMenu.getOos(), topMenu.getFos2(), topMenu.getOos2(), matrice, sottoMatrice, topMenu.getFileSaver(), file.getAbsolutePath()+"\\temp");
+				            System.out.println("SALVATAGGIO AUTOMATICO"); //debug
+				            System.out.println(percorsoCorrente.getAbsolutePath()); //debug
 				    		
 				            try 
 				    		{
 				            	System.out.println("ENTRO TRY CATCH AUTOSAVE");
 				            	
+				            	//salvataggio la sstruttura dati principale su file binario con suffisso ".autosave"
 				            	FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
 				    			ObjectOutputStream oos = new ObjectOutputStream(fos);
 				    			oos.writeObject(matrice);
 				    			oos.close();
 				            	
-				    			
+				    			//salvataggio la sottomatrice su file binario con suffisso ".autosave.sottomatrice"
 				            	FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottomatrice");
 				    			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
 				    			oos2.writeObject(sottoMatrice);
@@ -239,7 +241,9 @@ public class Inizializzatore
 				    		}
 				        }
 				    };
+				    //crea un pool formato da un thread
 				    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+				    //abilita l'esecuzione di del salvataggio automatico dopo il ritardo iniziale di 0 secondi, a periodi regolari definiti dalla variabile timerAutosalvataggio
 				    executor.scheduleAtFixedRate(salvataggioAutomatico, 0, timerAutosalvataggio, TimeUnit.SECONDS);
 				}
 			}	
@@ -271,7 +275,7 @@ public class Inizializzatore
         menuHelp.add(opzioneMenuHelp1);
         menuHelp.add(opzioneMenuHelp2);
         barraHelp.add(menuHelp);
-           
+        
         JPanel pannelloNordUpper = new JPanel();
         JPanel pannelloNord = new JPanel();
         
@@ -285,7 +289,6 @@ public class Inizializzatore
         pannelloNordUpper.add(barraHelp);
         pannelloNord.add(pannelloNordUpper, BorderLayout.NORTH);
         pannelloNord.add(operationDisplayer, BorderLayout.SOUTH);
-
 
 		table.setCellSelectionEnabled(true);
 		table.setBackground(new Color(232, 255, 250));
@@ -301,7 +304,8 @@ public class Inizializzatore
 	    
 	    table.getColumnModel().getColumn(0).setMaxWidth(30);
 	    
-	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); //JTable must not auto-resize the columns by setting the AUTO_RESIZE_OFF mode
+	    //Imposta la JTable affinché non ridimensioni automaticamente la dimensione delle colonne 
+	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
 	    
 	    Frame finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
@@ -310,11 +314,5 @@ public class Inizializzatore
 	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, 
 	    		opzioneMenuHelp1, opzioneMenuHelp2, 
 	    		matrice, sottoMatrice);
-	    
-
-	    
-	    
-
-	    
 	}
 }

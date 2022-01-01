@@ -83,8 +83,8 @@ public class CellaOperazione extends CellaGenerica
 		System.out.println("tmp1: " + tmp1); //tmp1 è ancora String va convertito in int e assegnato a rowCell1
 		System.out.println("tmp2: " + tmp2); //tmp2 è ancora String va convertito in int e assegnato a rowCell2
 		
-		rowCell1 = Integer.valueOf(tmp1);
-		rowCell2 = Integer.valueOf(tmp2);
+		rowCell1 = Integer.valueOf(tmp1); //conversione di tmp1 ad intero
+		rowCell2 = Integer.valueOf(tmp2); //conversione di tmp2 ad intero
 
 		System.out.println("cell1: " + cell1); //debug
 		System.out.println("cell2: " + cell2); //debug

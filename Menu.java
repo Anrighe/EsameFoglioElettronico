@@ -43,7 +43,7 @@ public class Menu
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON NEW");
+		    	System.out.println("BUTTON NEW"); //debug
 		    	finestra.getF().dispose();
 		    	@SuppressWarnings("unused")
 				Inizializzatore foglioElettronico = new Inizializzatore();
@@ -54,7 +54,7 @@ public class Menu
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON OPEN");
+		    	System.out.println("BUTTON OPEN"); //debug
 		    	
 		    	fileOpener = new JFileChooser();
 		    	
@@ -66,16 +66,16 @@ public class Menu
 		    	
 		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
-		    		System.out.println("È stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath());
+		    		System.out.println("È stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath()); //debug
 
 		    		try 
 		    		{
 						fis = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath());
 						ois = new ObjectInputStream(fis);
 						
-						System.out.println("Contenuto struttura dati prima del caricamento:");
-						for (int i = 0; i < dim; ++i)
-							System.out.println(matrice[i]);
+						System.out.println("Contenuto struttura dati prima del caricamento:"); //debug
+						for (int i = 0; i < dim; ++i) 
+							System.out.println(matrice[i]); 
 
 						//ArrayList di appoggio usato per copiare la matrice originale completamente da file binario
 						@SuppressWarnings("unchecked")
@@ -84,10 +84,11 @@ public class Menu
 						for (int i = 0; i < dim; ++i)
 							matrice[i] = newMatrice[i];
 						
-						System.out.println("Contenuto struttura dati caricata:");
+						System.out.println("Contenuto struttura dati caricata:"); //debug
 						for (int i = 0; i < dim; ++i)
 							System.out.println(matrice[i]);
 						
+						//TODO: commento da eliminare?
 						//è necessario ripetere due volte la procedura affinché vada a buon fine: 
 						//la prima volta darà un out of bounds exception perché non avendo celle selezionate
 						//getSelectedColumn e getSelectedRows ritornano -1
@@ -118,7 +119,7 @@ public class Menu
 		    		}
 		    		catch (IOException e1)
 		    		{
-		    			System.out.println("IOEXEPTION");
+		    			System.out.println("IOEXEPTION"); //debug
 		    			e1.printStackTrace();
 		    		} 
 		    		catch (ClassNotFoundException e1) 
@@ -137,7 +138,7 @@ public class Menu
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON SAVE AS");
+		    	System.out.println("BUTTON SAVE AS"); //debug
 		    	
 		    	fileSaver = new JFileChooser();
 		    	
@@ -150,11 +151,11 @@ public class Menu
 		    	{
 		    		boolean esisteFileMatrice = new File("sovrascrittura").exists();
 		    		
-		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile());
+		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile()); //debug
 		    		
 		    		if (esisteFileMatrice == true)
 		    		{
-		    			System.out.println("IL FILE ESISTE GIà");
+		    			System.out.println("IL FILE ESISTE GIà"); //debug
 		    			
 		    			Conferma promptConferma = new Conferma();
 		    			
@@ -164,10 +165,10 @@ public class Menu
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
-								System.out.println("PREMUTO SI");
+								System.out.println("PREMUTO SI"); //debug
 								promptConferma.getPopUpConferma().dispose();
 
-								System.out.println("SOVRASCRIVO");
+								System.out.println("SOVRASCRIVO"); //debug
 								salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
 							}
 		    			});
@@ -177,16 +178,16 @@ public class Menu
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
-								System.out.println("PREMUTO NO");
+								System.out.println("PREMUTO NO"); //debug
 								promptConferma.getPopUpConferma().dispose();
 							}
 		    			});
 		    		}
 		    		else
 		    		{
-		    			System.out.println("ENTRO ELSE SALVATAGGIO");
+		    			System.out.println("ENTRO ELSE SALVATAGGIO"); //debug
 		    			salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
-		    			System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath());
+		    			System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath()); //debug
 		    		}
 		    	}
 		    }
@@ -196,8 +197,36 @@ public class Menu
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON EXIT");
+		    	System.out.println("BUTTON ESCI"); //debug
 		    	finestra.getF().dispose();
+		    }
+		});
+		
+		opzioneMenuHelp1.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON DOCUMENTAZIONE"); //debug
+		    	
+		    	Desktop desktop = Desktop.getDesktop();
+		    	File path = new File("");
+		    	File docPath = new File(path.getAbsolutePath() + "\\documentazionex.pdf");
+		    	try 
+		    	{
+					desktop.open(docPath);
+				} 
+		    	catch (IllegalArgumentException e1)
+		    	{
+		    		//TODO: aggiungere l'opzione per accedere a documentazione online
+		    		e1.printStackTrace();
+		    		String messaggio = "File documentazione non trovato";
+		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
+		    	}
+
+		    	catch (IOException e1) 
+		    	{
+					e1.printStackTrace();
+				}
 		    }
 		});
 		
@@ -205,7 +234,7 @@ public class Menu
 		{
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON TRACCIA");
+		    	System.out.println("BUTTON TRACCIA"); //debug
 		    	if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) 
 		    	{
 		    	    try 
