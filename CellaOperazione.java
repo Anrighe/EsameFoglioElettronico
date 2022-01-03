@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
+/**	
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class CellaOperazione extends CellaGenerica
 {
 	private static final long serialVersionUID = 1L;

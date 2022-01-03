@@ -1,3 +1,8 @@
+/**	
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class CellaNumeri  extends CellaGenerica
 {
 	private static final long serialVersionUID = 1L;

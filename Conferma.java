@@ -6,6 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+/**	Classe che gestisce il popup di conferma per la sovrascrittura duranete il salvataggio di un file
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class Conferma 
 {
 	private JFrame popUpConferma;
@@ -13,7 +18,6 @@ public class Conferma
 	private JLabel label;
 	private JButton bottoneSi;
 	private JButton bottoneNo;
-	
 	
 	public JFrame getPopUpConferma()
 	{

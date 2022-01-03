@@ -36,11 +36,12 @@ public class Inizializzatore
 	/** Memorizza il tipo della classe della cella selezionata nel JTable */
 	private String classeCellaSelezionata;
 	
-	/** Struttura dati <b>primaria</b> utilizzata per l'effettivo contenuto di una cella dopo le modifiche apportate alla JTable */	
+	/** Struttura dati <b>primaria</b> utilizzata per l'effettivo contenuto di una cella dopo le modifiche apportate alla JTable. 
+	 *	<p>Utilizzo dei generics: all'interno dell'array di ArrayList e' possibile inserire qualsiasi cella che ha un qualsiasi rapporto di parentela discendente con la classe <b>CellaGenerica</b> */	
 	private ArrayList<CellaGenerica> matrice[];
 	
 	/** Struttura dati <b>secondaria</b> utilizzata per memorizzare cos'era precedentemente una cella.
-	 * 	<p>Nel caso di una cella di tipo operazione memorizza la stringa che ha determinato un risultato</p> */
+	 * 	<p>Per maggiori informazioni visionare la classe <b>Displayer</b></p> */ 
 	private Displayer sottoMatrice; 
 	
 	/** Array utilizzato per impostare i nomi delle colonne del DefaultTableModel a lettere ordinate alfabeticamente */
@@ -61,14 +62,14 @@ public class Inizializzatore
 	 * 	<p>Regex utilizzata: <b>^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$</b></p> */ 
 	private Pattern patternOperazioni;
 	
-	/** Matcher utilizzato per confrontare il contenuto della cella con il pattern per operazioni */
+	/** Matcher utilizzato per confrontare il contenuto della cella con il <b>patternOperazioni</b> */
 	private Matcher matcherOperazioni;
 	
 	/** Pattern per il contenuto cella di tipo numerico.
 	 * 	<p>Regex utilizzata: <b>^-{0,1}[0-9]+$</b></p> */ 
 	private Pattern patternNumeri;
 	
-	/** Matcher utilizzato per confrontare il contenuto della cella con il pattern per numeri */
+	/** Matcher utilizzato per confrontare il contenuto della cella con il <b>patternNumeri</b> */
 	private Matcher matcherNumeri;
 	
 	/** True se la cella e' di tipo <b>CellaTesto</b> */
@@ -95,7 +96,7 @@ public class Inizializzatore
 	/** Contenitore per le opzioni del menu <b>File</b> */ 
 	private JMenuBar barraFile;
     
-	/** Menu drop-down <b>File</b> */ 
+	/** Menu <b>File</b> */ 
 	private JMenu menuFile;
 	
     /** Opzione <b>Nuovo</b> del menu <b>File</b> */
@@ -113,7 +114,7 @@ public class Inizializzatore
 	/** Contenitore per le opzioni del menu <b>Aiuto</b> */ 
 	private JMenuBar barraHelp;
 	
-	/** Menu drop-down <b>Aiuto</b> */ 
+	/** Menu <b>Aiuto</b> */ 
 	private JMenu menuHelp;
 	
 	/** Opzione <b>Documentazione</b> del menu <b>Aiuto</b> */
@@ -126,21 +127,28 @@ public class Inizializzatore
 	
 	private JPanel pannelloNord;
     
-	
+	/** Utilizzata per impostare l'allineamento a sinistra del pannello <b>pannelloNordUpper</b> */
 	private FlowLayout leftAlignment;
 	
-	
+	/** Per implementare le barre di scorrimento orizzontali e verticali */
 	private JScrollPane sp;
 	
+	/** Per impostare colore e allineamento testo della prima colonna */
 	private DefaultTableCellRenderer setPrimaColonna;
 	
+	/** Crea ed imposta il JFrame.
+	 * 	<p>Per maggiori informazioni visionare la classe <b>Frame.java</b></p> */
 	private Frame finestra;
 	
 	
 	/** Costruttore che inizializza tutte le componenti del foglio elettronico.
-	 * <p>- Istanzia un oggetto per la struttura dati principale [<b>matrice</b>] e per quella secondaria [<b>sottomatrice</b>]</p>
-	 * <p>- Configura ed istanzia il DefaultTableModel [<b>dati</b>]</p>
-	 * <p></p>
+	 * 	<p>- &emsp;Istanzia un oggetto per la struttura dati principale <b>matrice</b> e per quella secondaria <b>sottomatrice</b></p>
+	 * 	<p>- &emsp;Configura ed istanzia il DefaultTableModel e il JTable</p>
+	 * 	<p>- &emsp;Istanzia il listener delle modifiche avvenute al JTable, il quale:</p>
+	 * 	<p>  &emsp;&emsp;-&emsp;Controlla se la cella modificata contiene testo, numeri, un'operazione o se e' vuota</p>
+	 * 	<p>  &emsp;&emsp;-&emsp;Converte la cella modificata alla tipo coerente con la modifica, aggiornando le due strutture dati</p>
+	 *  <p>  &emsp;&emsp;-&emsp;Gestisce il thread per l'autosavataggio</p>
+	 * 	<p>- &emsp;Configura ed inizializza le componenti grafiche</p>
 	 */
 	@SuppressWarnings("unchecked")
 	public Inizializzatore()
@@ -179,13 +187,13 @@ public class Inizializzatore
 			public boolean isCellEditable(int row, int column) 
 			{
 				if (column == 0)
-					return false; //Fa in modo che tutte le celle della prima colonna non siano editabili
+					return false; 
 				else
 					return true;
 			}
 		};
 		
-		//configurazione del DefaultTableModel
+		/** Configurazione del DefaultTableModel <b>dati</b> */
 		for (int i = 0; i < dim; i++)
 		{
 			for (int j = 0; j < dim; j++)
@@ -200,7 +208,7 @@ public class Inizializzatore
 			}
 		}
 		
-		//Configurazione dell'operationDisplayer
+		/** Configurazione del JTextField <b>operationDisplayer</b> */
 		operationDisplayer = new JTextField();
 		operationDisplayer.setBackground(new Color(199, 217, 252));
 		operationDisplayer.setEditable(false);
@@ -212,7 +220,7 @@ public class Inizializzatore
 		{	
 			
 			/** Metodo invocato ad ogni modifica del JTable
-			 *  * @param listenerModifica
+			 *  @param listenerModifica
 			 */
 			public void tableChanged(TableModelEvent listenerModifica) 
 			{
@@ -229,7 +237,7 @@ public class Inizializzatore
 				
 				if (!text.equals(""))
 				{
-					/** Controlla se nella cella è contenuta un'addizione o una sottrazione del tipo =A1+A2 */
+					/** Controlla se nella cella è contenuta un'addizione o una sottrazione del tipo <i>=A1±A2</i> */
 					patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$");
 					matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
@@ -273,7 +281,6 @@ public class Inizializzatore
 					
 					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA"); //debug
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
-					
 				}
 				
 				/** Conversione della cella a tipo <b>CellaOperazione</b> */
@@ -309,7 +316,7 @@ public class Inizializzatore
 				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
 				
-				/** Creazione di un Thread predisposto al salvataggio delle due strutture dati se non e' ancora stato creato in precedenza */
+				/** Creazione di un Thread predisposto al salvataggio delle due strutture dati se non e' ancora stato creato uno in precedenza */
 				if (threadCreato == false)
 				{
 					threadCreato = true;
@@ -318,8 +325,8 @@ public class Inizializzatore
 				    
 				    Runnable salvataggioAutomatico = new Runnable() 
 				    {
-				    	/**	Metodo eseguito all'avvio del Thread */
-				        public void run() 
+				    	/**	Metodo eseguito dal Thread */
+				        public synchronized void run() 
 				        {
 				            System.out.println("SALVATAGGIO AUTOMATICO"); //debug
 				            System.out.println(percorsoCorrente.getAbsolutePath()); //debug
@@ -400,7 +407,7 @@ public class Inizializzatore
 		table.setBackground(new Color(232, 255, 250));
 		table.setRowHeight(22);
 		
-		/** Imposta la prima colonna con background grigio e testo allineato al centro e la barra di scorrimento */
+		/** Imposta la prima colonna con background grigio e testo allineato al centro e le barre di scorrimento */
 		sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		setPrimaColonna = new DefaultTableCellRenderer();
 	    setPrimaColonna.setBackground(new Color(238, 238, 238, 255));

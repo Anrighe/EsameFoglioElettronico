@@ -11,10 +11,14 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
+/**	Classe che gestisce le funzionalita' del menu
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class Menu 
 {		
 	private File currentPath;

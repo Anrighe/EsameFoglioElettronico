@@ -1,5 +1,10 @@
 import java.io.Serializable;
 
+/**	
+ * 	@author Enrico Marras
+ * 	@version Java SE Development Kit 17
+ * 	<body style="background-color:#A4BEDA;"></body>
+ */ 
 public class CellaGenerica implements Serializable
 {
 	
