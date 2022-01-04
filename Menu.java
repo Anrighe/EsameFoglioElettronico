@@ -153,7 +153,7 @@ public class Menu
 		    	
 		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
-		    		boolean esisteFileMatrice = new File("sovrascrittura").exists();
+		    		boolean esisteFileMatrice = new File(fileSaver.getSelectedFile() + "").exists();
 		    		
 		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile()); //debug
 		    		
@@ -165,7 +165,6 @@ public class Menu
 		    			
 		    			promptConferma.getBottoneSi().addActionListener(new ActionListener()
 		    			{
-
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
@@ -223,7 +222,7 @@ public class Menu
 		    	{
 		    		//TODO: aggiungere l'opzione per accedere a documentazione online
 		    		e1.printStackTrace();
-		    		String messaggio = "File documentazione non trovato";
+		    		String messaggio = "File documentazione non trovato nel percorso \n" + path.getAbsolutePath();
 		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
 		    	}
 

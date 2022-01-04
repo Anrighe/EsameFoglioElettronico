@@ -88,7 +88,7 @@ public class Inizializzatore
 	private final int delaySalvataggio = 0;
 	
 	/** Intervallo di secondi che separa ogni salvataggio automatico */
-	private final int timerAutosalvataggio = 30; 
+	private final int timerAutosalvataggio = 10; 
 	
 	/** Usata per ottenere l'attuale percorso assoluto */
 	private File percorsoCorrente; 
@@ -328,33 +328,41 @@ public class Inizializzatore
 				    	/**	Metodo eseguito dal Thread */
 				        public synchronized void run() 
 				        {
-				            System.out.println("SALVATAGGIO AUTOMATICO"); //debug
-				            System.out.println(percorsoCorrente.getAbsolutePath()); //debug
-				    		
-				            try 
-				    		{
-				            	System.out.println("ENTRO TRY CATCH AUTOSAVE"); //debug
-				            	
-				            	/** Salvataggio la struttura dati principale su file binario con suffisso ".autosave" */
-				            	FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
-				    			ObjectOutputStream oos = new ObjectOutputStream(fos);
-				    			oos.writeObject(matrice);
-				    			oos.close();
-				            	
-				    			/** Salvataggio la sottomatrice su file binario con suffisso ".autosave.sottomatrice" */
-				            	FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottomatrice");
-				    			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
-				    			oos2.writeObject(sottoMatrice);
-				    			oos2.close();
-				    		}
-				    		catch (FileNotFoundException e1) 
-				    		{
-				    			e1.printStackTrace();
-				    		}
-				    		catch (IOException e1) 
-				    		{
-				    			e1.printStackTrace();
-				    		}
+				        	
+				        	System.out.println("CONTROLLO SE CI SONO CELLE SELEZIONATE"); //debug
+				        	if (!table.isEditing())
+				        	{
+				        		System.out.println("NON SI STA EDITANDO NESSUNA CELLA"); //debug
+				        		System.out.println("SALVATAGGIO AUTOMATICO"); //debug
+				        		System.out.println(percorsoCorrente.getAbsolutePath()); //debug
+				        		
+				        		try 
+				        		{
+				        			System.out.println("ENTRO TRY CATCH AUTOSAVE"); //debug
+				        			
+				        			/** Salvataggio la struttura dati principale su file binario con suffisso ".autosave" */
+				        			FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
+				        			ObjectOutputStream oos = new ObjectOutputStream(fos);
+				        			oos.writeObject(matrice);
+				        			oos.close();
+				        			
+				        			/** Salvataggio la sottomatrice su file binario con suffisso ".autosave.sottomatrice" */
+				        			FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottomatrice");
+				        			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
+				        			oos2.writeObject(sottoMatrice);
+				        			oos2.close();
+				        		}
+				        		catch (FileNotFoundException e1) 
+				        		{
+				        			e1.printStackTrace();
+				        		}
+				        		catch (IOException e1) 
+				        		{
+				        			e1.printStackTrace();
+				        		}
+				        		
+				        	}
+				        	
 				        }
 				    };
 				    /** Creazione di un pool formato da un singolo Thread */
