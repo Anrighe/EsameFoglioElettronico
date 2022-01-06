@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +40,8 @@ public class Menu
 	
 	public Menu(int dim, DefaultTableModel dati, JTable table, Frame finestra, 
 			JMenuItem opzioneMenuFile1, JMenuItem opzioneMenuFile2, 
-			JMenuItem opzioneMenuFile3, JMenuItem opzioneMenuFile4, 
+			JMenuItem opzioneMenuFile3, JMenuItem opzioneMenuFile4,
+			JMenuItem opzioneSottomenuTema1, JMenuItem opzioneSottomenuTema2,
 			JMenuItem opzioneMenuHelp1, JMenuItem opzioneMenuHelp2, 
 			ArrayList<CellaGenerica> matrice[], Displayer sottoMatrice)
 	{
@@ -202,6 +204,24 @@ public class Menu
 		    {
 		    	System.out.println("BUTTON ESCI"); //debug
 		    	finestra.getF().dispose();
+		    }
+		});
+		
+		opzioneSottomenuTema1.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON TEMA1"); //debug
+		    	table.setBackground(new Color(232, 255, 250));
+		    }
+		});
+		
+		opzioneSottomenuTema2.addActionListener(new ActionListener() 
+		{
+		    public void actionPerformed(ActionEvent e)
+		    {
+		    	System.out.println("BUTTON TEMA2"); //debug
+		    	table.setBackground(new Color(169, 185, 224));
 		    }
 		});
 		

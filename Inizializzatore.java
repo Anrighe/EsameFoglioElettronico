@@ -88,7 +88,7 @@ public class Inizializzatore
 	private final int delaySalvataggio = 0;
 	
 	/** Intervallo di secondi che separa ogni salvataggio automatico */
-	private final int timerAutosalvataggio = 10; 
+	private final int timerAutosalvataggio = 30; 
 	
 	/** Usata per ottenere l'attuale percorso assoluto */
 	private File percorsoCorrente; 
@@ -110,6 +110,21 @@ public class Inizializzatore
 	
 	/** Opzione <b>Esci</b> del menu <b>File</b> */
 	private JMenuItem opzioneMenuFile4;
+	
+	/** Contenitore per le opzioni del menu <b>Finestra</b> */ 
+	private JMenuBar barraFinestra;
+	
+	/** Menu <b>Finestra</b> */ 
+	private JMenu menuFinestra;
+	
+	/** Menu <b>Tema</b> */ 
+	private JMenu sottomenuTema;
+	
+    /** Opzione <b>Tema</b> del sottomenu <b>Tema</b> */
+	private JMenuItem opzioneSottomenuTema1;
+	
+    /** Opzione <b>Tema</b> del sottomenu <b>Tema</b> */
+	private JMenuItem opzioneSottomenuTema2;
 	
 	/** Contenitore per le opzioni del menu <b>Aiuto</b> */ 
 	private JMenuBar barraHelp;
@@ -224,6 +239,11 @@ public class Inizializzatore
 			 */
 			public void tableChanged(TableModelEvent listenerModifica) 
 			{
+				/** Reimposta i flag del contenuto cella per prepararli al controllo */
+				ritMatcherTesto = false;
+				ritMatcherNumeri = false;
+				ritMatcherOperazione = false;
+				
 				System.out.println("Contenuto cella modificato: " + table.getValueAt(table.getSelectedRow(), table.getSelectedColumn())); //debug
 				
 				System.out.println("RIGA SELEZIONATA: " + table.getSelectedRow()); //debug
@@ -280,6 +300,8 @@ public class Inizializzatore
 					}
 					
 					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA"); //debug
+					
+					/** TODO: REVISIONARE COMMENTO: Comportamento polimorfico di getContCell(): ritorna il contenuto della cella */
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
 				}
 				
@@ -310,6 +332,14 @@ public class Inizializzatore
 				System.out.println("Contenuto struttura dati:"); //debug
 				for (int i = 0; i < dim; ++i) //debug
 					System.out.println(matrice[i]); //debug
+				/*
+				System.out.println("Contenuto sottostruttura dati:"); //debug
+				for (int i = 0; i < dim; ++i) //debug
+				{
+					for (int j = 0; j < dim; ++j) //debug
+						System.out.print(sottoMatrice.getDisplayer()[i][j]); //debug
+					System.out.println();
+				}*/
 
 				/** Stampa del contenuto e del tipo della cella selezionata nel JTextField */
 				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
@@ -347,7 +377,7 @@ public class Inizializzatore
 				        			oos.close();
 				        			
 				        			/** Salvataggio la sottomatrice su file binario con suffisso ".autosave.sottomatrice" */
-				        			FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottomatrice");
+				        			FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottoMatrice");
 				        			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
 				        			oos2.writeObject(sottoMatrice);
 				        			oos2.close();
@@ -365,6 +395,8 @@ public class Inizializzatore
 				        	
 				        }
 				    };
+				    
+				    
 				    /** Creazione di un pool formato da un singolo Thread */
 				    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 				    
@@ -386,6 +418,17 @@ public class Inizializzatore
         menuFile.add(opzioneMenuFile3);
         menuFile.add(opzioneMenuFile4);
         barraFile.add(menuFile);
+        
+        /** Inizializzazione menu Finestra */
+        barraFinestra = new JMenuBar();
+        menuFinestra = new JMenu("Finestra");
+        sottomenuTema = new JMenu("Tema");
+        opzioneSottomenuTema1 = new JMenuItem("Tema 1");
+        opzioneSottomenuTema2 = new JMenuItem("Tema 2");
+        sottomenuTema.add(opzioneSottomenuTema1);
+        sottomenuTema.add(opzioneSottomenuTema2);
+        menuFinestra.add(sottomenuTema);
+        barraFinestra.add(menuFinestra);
 
         /** Inizializzazione menu Aiuto */
         barraHelp = new JMenuBar();
@@ -406,19 +449,21 @@ public class Inizializzatore
         pannelloNord.setLayout(new BorderLayout());
         pannelloNordUpper.setLayout(leftAlignment);
         pannelloNordUpper.add(barraFile);
+        pannelloNordUpper.add(barraFinestra);
         pannelloNordUpper.add(barraHelp);
         pannelloNord.add(pannelloNordUpper, BorderLayout.NORTH);
         pannelloNord.add(operationDisplayer, BorderLayout.SOUTH);
+        pannelloNordUpper.setBackground(new Color(188, 208, 251));
 
         /** Inizializzazione JTable e JScrollPane */
 		table.setCellSelectionEnabled(true);
-		table.setBackground(new Color(232, 255, 250));
+		table.setBackground(new Color(232, 255, 250)); //TODO: IMPLEMENTA DARK THEME
 		table.setRowHeight(22);
 		
 		/** Imposta la prima colonna con background grigio e testo allineato al centro e le barre di scorrimento */
 		sp = new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		setPrimaColonna = new DefaultTableCellRenderer();
-	    setPrimaColonna.setBackground(new Color(238, 238, 238, 255));
+	    setPrimaColonna.setBackground(new Color(238, 238, 238, 255)); 
 	    setPrimaColonna.setHorizontalAlignment(JLabel.CENTER);
 	    table.getColumnModel().getColumn(0).setCellRenderer(setPrimaColonna);
 	    table.getTableHeader().setReorderingAllowed(false);
@@ -432,7 +477,8 @@ public class Inizializzatore
 	    
 	    /** Creazione dell'oggetto incaricato dell'implementazione delle funzionalita' del menu */
 	    new Menu(dim, dati, table, finestra, 
-	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4, 
+	    		opzioneMenuFile1, opzioneMenuFile2, opzioneMenuFile3, opzioneMenuFile4,
+	    		opzioneSottomenuTema1, opzioneSottomenuTema2,
 	    		opzioneMenuHelp1, opzioneMenuHelp2, 
 	    		matrice, sottoMatrice);
 	}
