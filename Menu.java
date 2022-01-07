@@ -119,7 +119,11 @@ public class Menu
 						for (int i = 0; i < dim; ++i)
 						{
 							for (int j = 1; j < dim; ++j) 
+							{
 								sottoMatrice.getDisplayer()[i][j] = sottoMatriceTmp.getDisplayer()[i][j];
+								System.out.print(sottoMatrice.getDisplayer()[i][j] + ",");
+							}
+							System.out.println();
 						}
 						ois2.close();
 		    		}
@@ -203,7 +207,7 @@ public class Menu
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON ESCI"); //debug
-		    	finestra.getF().dispose();
+		    	System.exit(0);
 		    }
 		});
 		

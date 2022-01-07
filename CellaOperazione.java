@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
@@ -47,13 +50,18 @@ public class CellaOperazione extends CellaGenerica
 	{
 		super();
 		
-		System.out.println("ENTRO IN CONVERSIONE CELLA OPERAZIONE");
+		boolean ritMatcherOperazioniNumeri = false;
 		
-		rifMatrice = matrice;
+		Pattern patternOperazioniNumeri = Pattern.compile("^=[0-9]++[\\+|-][0-9]++$");
+		Matcher matcherOperazioniNumeri = patternOperazioniNumeri.matcher(text);
+		ritMatcherOperazioniNumeri = matcherOperazioniNumeri.find();
+		
+		
+		System.out.println("ENTRO IN CONVERSIONE CELLA OPERAZIONE");
 		
 		int plus = text.indexOf("+");
 		int minus = text.indexOf("-");
-				
+		
 		if (plus != -1) //è un'addizione
 		{
 			addizione = true;
@@ -66,54 +74,86 @@ public class CellaOperazione extends CellaGenerica
 			posSegno = minus;
 			azioneOperazione = "sottrarre";
 		}
-
-		cell1 = String.valueOf(text.charAt(1));
-		cell2 = String.valueOf(text.charAt(posSegno+1));
 		
-		for (int i = 2; i < posSegno; i++)
-			cell1 = cell1 + String.valueOf(text.charAt(i));
-		
-		for (int i = posSegno+2; i < text.length(); i++)
-			cell2 = cell2 + String.valueOf(text.charAt(i));
-			
-		colCell1 = (Integer.valueOf(cell1.charAt(0))) - Integer.valueOf('A') + 1;
-		colCell2 = (Integer.valueOf(cell2.charAt(0))) - Integer.valueOf('A') + 1;
-		
-		for (int i = 1; i < cell1.length(); i++)
-			tmp1 = tmp1 + String.valueOf(cell1.charAt(i));
-		
-		for (int i = 1; i < cell2.length(); i++)
-			tmp2 = tmp2 + String.valueOf(cell2.charAt(i));
-
-		System.out.println("tmp1: " + tmp1); //tmp1 è ancora String va convertito in int e assegnato a rowCell1
-		System.out.println("tmp2: " + tmp2); //tmp2 è ancora String va convertito in int e assegnato a rowCell2
-		
-		rowCell1 = Integer.valueOf(tmp1); //conversione di tmp1 ad intero
-		rowCell2 = Integer.valueOf(tmp2); //conversione di tmp2 ad intero
-
-		System.out.println("cell1: " + cell1); //debug
-		System.out.println("cell2: " + cell2); //debug
-		System.out.println("colCell1:" + colCell1); //debug
-		System.out.println("colCell2:" + colCell2); //debug
-		System.out.println("rowCell1:" + rowCell1); //debug
-		System.out.println("rowCell2:" + rowCell2); //debug
-		
-		System.out.println("operatore1: " + matrice[rowCell1-1].get(colCell1).getContCell());
-		System.out.println("operatore2: " + matrice[rowCell2-1].get(colCell2).getContCell());
-		
-		operazioneValida = isValidOperation(matrice);
-		
-		if (operazioneValida == true)
+		if (ritMatcherOperazioniNumeri == true)
 		{
-			if (addizione == true) //l'operazione è un'addizione
+			System.out.println("OPERAZIONE TRA NUMERI - " + text); //debug
+			//TODO: ridurre l'uso del codice doppiato da sotto
+			operazioneValida = true;
+			System.out.println("Plus: " + plus); //debug
+			System.out.println("Minus: " + minus); //debug
+			
+			cell1 = String.valueOf(text.charAt(1));
+			cell2 = String.valueOf(text.charAt(posSegno+1));
+			
+			for (int i = 2; i < posSegno; i++)
+				cell1 = cell1 + String.valueOf(text.charAt(i));
+			
+			for (int i = posSegno+2; i < text.length(); i++)
+				cell2 = cell2 + String.valueOf(text.charAt(i));
+			
+			System.out.println("Cell1: " + cell1); //debug
+			System.out.println("Cell2: " + cell2); //debug
+			
+			if (addizione == true)
+				result = Integer.valueOf(cell1) + Integer.valueOf(cell2);
+			else
+				result = Integer.valueOf(cell1) - Integer.valueOf(cell2);
+		}
+		else
+		{
+			System.out.println("OPERAZIONE TRA INDIRIZZI - " + text); //debug
+			rifMatrice = matrice;
+			
+			
+			cell1 = String.valueOf(text.charAt(1));
+			cell2 = String.valueOf(text.charAt(posSegno+1));
+			
+			for (int i = 2; i < posSegno; i++)
+				cell1 = cell1 + String.valueOf(text.charAt(i));
+			
+			for (int i = posSegno+2; i < text.length(); i++)
+				cell2 = cell2 + String.valueOf(text.charAt(i));
+			
+			colCell1 = (Integer.valueOf(cell1.charAt(0))) - Integer.valueOf('A') + 1;
+			colCell2 = (Integer.valueOf(cell2.charAt(0))) - Integer.valueOf('A') + 1;
+			
+			for (int i = 1; i < cell1.length(); i++)
+				tmp1 = tmp1 + String.valueOf(cell1.charAt(i));
+			
+			for (int i = 1; i < cell2.length(); i++)
+				tmp2 = tmp2 + String.valueOf(cell2.charAt(i));
+			
+			System.out.println("tmp1: " + tmp1); //tmp1 è ancora String va convertito in int e assegnato a rowCell1
+			System.out.println("tmp2: " + tmp2); //tmp2 è ancora String va convertito in int e assegnato a rowCell2
+			
+			rowCell1 = Integer.valueOf(tmp1); //conversione di tmp1 ad intero
+			rowCell2 = Integer.valueOf(tmp2); //conversione di tmp2 ad intero
+			
+			System.out.println("cell1: " + cell1); //debug
+			System.out.println("cell2: " + cell2); //debug
+			System.out.println("colCell1:" + colCell1); //debug
+			System.out.println("colCell2:" + colCell2); //debug
+			System.out.println("rowCell1:" + rowCell1); //debug
+			System.out.println("rowCell2:" + rowCell2); //debug
+			
+			System.out.println("operatore1: " + matrice[rowCell1-1].get(colCell1).getContCell());
+			System.out.println("operatore2: " + matrice[rowCell2-1].get(colCell2).getContCell());
+			
+			operazioneValida = isValidOperation(matrice);
+			
+			if (operazioneValida == true)
 			{
-				result = matrice[rowCell1-1].get(colCell1).getContCellInt() + matrice[rowCell2-1].get(colCell2).getContCellInt();
-				System.out.println("Result: " + result);
-			}
-			else //l'operazione è una sottrazione
-			{
-				result = matrice[rowCell1-1].get(colCell1).getContCellInt() - matrice[rowCell2-1].get(colCell2).getContCellInt();
-				System.out.println("Result: " + result);
+				if (addizione == true) //l'operazione è un'addizione
+				{
+					result = matrice[rowCell1-1].get(colCell1).getContCellInt() + matrice[rowCell2-1].get(colCell2).getContCellInt();
+					System.out.println("Result: " + result);
+				}
+				else //l'operazione è una sottrazione
+				{
+					result = matrice[rowCell1-1].get(colCell1).getContCellInt() - matrice[rowCell2-1].get(colCell2).getContCellInt();
+					System.out.println("Result: " + result);
+				}
 			}
 		}
 	}

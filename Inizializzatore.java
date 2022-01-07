@@ -17,6 +17,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -85,10 +87,10 @@ public class Inizializzatore
 	private boolean threadCreato = false; 
 	
 	/** Delay in secondi del salvataggio automatico */
-	private final int delaySalvataggio = 0;
+	private final int delaySalvataggio = 2;
 	
 	/** Intervallo di secondi che separa ogni salvataggio automatico */
-	private final int timerAutosalvataggio = 30; 
+	private final int timerAutosalvataggio = 20; 
 	
 	/** Usata per ottenere l'attuale percorso assoluto */
 	private File percorsoCorrente; 
@@ -258,7 +260,7 @@ public class Inizializzatore
 				if (!text.equals(""))
 				{
 					/** Controlla se nella cella è contenuta un'addizione o una sottrazione del tipo <i>=A1±A2</i> */
-					patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$");
+					patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$|^=[0-9]++[\\+|-][0-9]++$");
 					matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
 					System.out.println("Operazione: " + ritMatcherOperazione); //debug: stampa true se è un'operazione
@@ -346,6 +348,12 @@ public class Inizializzatore
 				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
 				
+				
+				//TODO: Il thread viene creato nuovamente ogni volta che viene istanziato
+				//un nuovo oggetto di tipo inizializzatore e non muore. Devo trovare un modo per eliminare quello
+				//attualmente in funzione.
+				//Il thread non riesce a salvare la sottomatrice
+				
 				/** Creazione di un Thread predisposto al salvataggio delle due strutture dati se non e' ancora stato creato uno in precedenza */
 				if (threadCreato == false)
 				{
@@ -381,6 +389,13 @@ public class Inizializzatore
 				        			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
 				        			oos2.writeObject(sottoMatrice);
 				        			oos2.close();
+				        			
+									for (int i = 0; i < dim; ++i)
+									{
+										for (int j = 1; j < dim; ++j) 
+											System.out.print(sottoMatrice.getDisplayer()[i][j] + ",");
+										System.out.println();
+									}
 				        		}
 				        		catch (FileNotFoundException e1) 
 				        		{
@@ -396,12 +411,21 @@ public class Inizializzatore
 				        }
 				    };
 				    
-				    
 				    /** Creazione di un pool formato da un singolo Thread */
 				    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 				    
 				    /** Abilitazione dell'esecuzione del salvataggio automatico dopo il ritardo iniziale di [<b>delaySalvataggio</b>] secondi, a periodi regolari definiti dalla variabile timerAutosalvataggio */
 				    executor.scheduleAtFixedRate(salvataggioAutomatico, delaySalvataggio, timerAutosalvataggio, TimeUnit.SECONDS);
+				    
+				    //se viene aperta una nuova finestra interrompi i thread 
+					opzioneMenuFile1.addActionListener(new ActionListener() 
+					{
+					    public void actionPerformed(ActionEvent e)
+					    {
+					    	System.out.println("BUTTON NEW DENTRO INIZIALIZZATORE"); //debug
+					    	executor.shutdownNow();
+					    }
+					});
 				}
 			}	
 		});
