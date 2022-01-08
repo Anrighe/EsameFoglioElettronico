@@ -28,6 +28,7 @@ public class Menu
 	/** Gestisce il caricamento interattivo dei dati da file  */
 	private JFileChooser fileOpener;
 	
+	
 	private FileInputStream fis;
 	private ObjectInputStream ois;
 	private FileInputStream fis2;
@@ -41,6 +42,15 @@ public class Menu
 	private FileOutputStream fos2;
 	private ObjectOutputStream oos2;
 	
+	/** Usata per aprire la traccia d'esame */
+	private Desktop desktop;
+	
+	/** Utilizzata per ottenere il percorso assoluto corrente */
+	private File path;
+	
+	/** Utilizzata per aprire la documentazione */
+	private File docPath;
+	
 	/**	Configurazione delle varie funzionalità del menu:
 	 * 	<p>- &emsp;<b>Nuovo</b>: termina la sessione corrente e apre una nuova finestra di foglio vuoto</p>
 	 *	<p>- &emsp;<b>Apri</b>: permette di caricare un foglio elettronico da un file binario tramite un prompt interattivo</p>
@@ -50,8 +60,8 @@ public class Menu
 	 *	<p>- &emsp;<b>Documentazione</b>: apre la documentazione del progetto</p>
 	 *	<p>- &emsp;<b>Traccia d'esame</b>: apre la traccia d'esame</p>
 	 * @param dim Dimensione di altezza e larghezza del foglio elettronico
-	 * @param dati 
-	 * @param table
+	 * @param dati DefaultTableModel
+	 * @param table JTable
 	 * @param finestra Gestore del JFrame
 	 * @param opzioneMenuFile1 Opzione <b>Nuovo</b> del menu <b>File</b>
 	 * @param opzioneMenuFile2 Opzione <b>Apri</b> del menu <b>File</b>
@@ -86,17 +96,17 @@ public class Menu
 		
 		opzioneMenuFile2.addActionListener(new ActionListener() 
 		{
-			/**	
+			/**	Apre un prompt interattivo che permette di scegliere il file binario da aprire per caricare il foglio elettronico.
+			 * 	È necessario aprire il file del nome esatto che si è salvato e il file secondario con suffiso "<b>.sottoMatrice</b>"
 			 * 	@param e
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON OPEN"); //debug
 		    	
+		    	//** Imposta il prompt interattivo per l'apertura del file */
 		    	fileOpener = new JFileChooser();
-		    	
 		    	currentPath = new File(System.getProperty("user.dir"));
-		    	
 		    	fileOpener.setCurrentDirectory(currentPath);
 		    	fileOpener.setDialogTitle("Apri");
 		    	fileOpener.setApproveButtonText("Apri");
@@ -114,10 +124,11 @@ public class Menu
 						for (int i = 0; i < dim; ++i) 
 							System.out.println(matrice[i]); 
 
-						//ArrayList di appoggio usato per copiare la matrice originale completamente da file binario
+						/** ArrayList di appoggio usato per copiare la struttura dati principale dal file binario */
 						@SuppressWarnings("unchecked")
 						ArrayList<CellaGenerica> newMatrice[] = (ArrayList<CellaGenerica>[]) ois.readObject();
 						
+						/** Assegnamento della struttura dati principale da quella di appoggio */
 						for (int i = 0; i < dim; ++i)
 							matrice[i] = newMatrice[i];
 						
@@ -130,7 +141,8 @@ public class Menu
 						//la prima volta darà un out of bounds exception perché non avendo celle selezionate
 						//getSelectedColumn e getSelectedRows ritornano -1
 						
-						//senza questa selezione, setValueAt solleva un ArrayOutOfBoundsException
+						/** Reset della cella selezionata per evitare l'ArrayOutOfBoundsException sollevato dal 
+						 * 	metodo setValueAt solleva un ArrayOutOfBoundsException */
 						table.setColumnSelectionInterval(1, 1);
 						table.setRowSelectionInterval(0, 0);
 						
@@ -144,9 +156,11 @@ public class Menu
 						fis2 = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
 						ois2 = new ObjectInputStream(fis2);
 						
-						//sottomatrice d'appoggio per copiare quella da caricare
+						/** Displayer di appoggio usata per caricare la struttura dati secondaria dal file binario con 
+						 * suffisso <b>.sottoMatrice</b> */
 						Displayer sottoMatriceTmp = (Displayer) ois2.readObject();
 						
+						/** Assegnamento della struttura dati secondaria da quella di appoggio */
 						for (int i = 0; i < dim; ++i)
 						{
 							for (int j = 1; j < dim; ++j) 
@@ -160,7 +174,6 @@ public class Menu
 		    		}
 		    		catch (IOException e1)
 		    		{
-		    			System.out.println("IOEXEPTION"); //debug
 		    			e1.printStackTrace();
 		    		} 
 		    		catch (ClassNotFoundException e1) 
@@ -177,31 +190,45 @@ public class Menu
 	    
 		opzioneMenuFile3.addActionListener(new ActionListener() 
 		{
+			/**	Apre un prompt interattivo che permette di scegliere dove salvare e che nome dare al file binario su cui salvare l'attuale foglio elettronico  da aprire per caricare il foglio elettronico.
+			 * 	<p>Dato un <b>[NOME_FILE]</b> verranno generati i seguenti file: </p>
+			 * 	<p>- &emsp;<b>[NOME_FILE]</b>: contiene la struttura dati principale</p>
+			 * 	<p>- &emsp;<b>[NOME_FILE].sottoMatrice</b>: contiene la struttura dati secondaria</p>
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON SAVE AS"); //debug
 		    	
+		    	//** Imposta il prompt di salvataggio interattivo */
 		    	fileSaver = new JFileChooser();
-		    	
 		    	currentPath = new File(System.getProperty("user.dir"));
 		    	fileSaver.setCurrentDirectory(currentPath);
 		    	fileSaver.setDialogTitle("Salva con nome");
 		    	fileSaver.setApproveButtonText("Salva");
 		    	
+		    	
 		    	if (fileSaver.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
+		    		/** Controllo dell'esistenza di un file dello stesso nome del file che si sta cercando di salvare 
+		    		 * 	nel percorso selezionato */
 		    		boolean esisteFileMatrice = new File(fileSaver.getSelectedFile() + "").exists();
 		    		
 		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile()); //debug
 		    		
+		    		/** Se e' gia' presente un file con lo stesso nome nel percorso selezionato viene chiesto all'utente
+		    		 * 	se desidera sovrascrivere il file 
+		    		 */
 		    		if (esisteFileMatrice == true)
 		    		{
 		    			System.out.println("IL FILE ESISTE GIà"); //debug
 		    			
 		    			Conferma promptConferma = new Conferma();
 		    			
+		    			
 		    			promptConferma.getBottoneSi().addActionListener(new ActionListener()
 		    			{
+		    				//TODO: Chiedere a Matt se questo è un Override
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
@@ -215,7 +242,8 @@ public class Menu
 		    			
 		    			promptConferma.getBottoneNo().addActionListener(new ActionListener()
 		    			{
-							@Override
+							//TODO: Chiedere a Matt se questo è un Override
+		    				@Override
 							public void actionPerformed(ActionEvent e) 
 							{
 								System.out.println("PREMUTO NO"); //debug
@@ -235,6 +263,9 @@ public class Menu
 	    
 		opzioneMenuFile4.addActionListener(new ActionListener() 
 		{
+			/**	Termina l'applicazione
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON ESCI"); //debug
@@ -244,6 +275,9 @@ public class Menu
 		
 		opzioneSottomenuTema1.addActionListener(new ActionListener() 
 		{
+			/** Imposta il <b>tema 1</b>
+			 *  @param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON TEMA1"); //debug
@@ -253,6 +287,9 @@ public class Menu
 		
 		opzioneSottomenuTema2.addActionListener(new ActionListener() 
 		{
+			/** Imposta il <b>tema 2</b>
+			 *  @param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON TEMA2"); //debug
@@ -262,13 +299,17 @@ public class Menu
 		
 		opzioneMenuHelp1.addActionListener(new ActionListener() 
 		{
+			/**	Cerca la documentazione nel percorso assoluto in cui è stato compilato il progetto.
+			 * 	In caso non sia presente la documentazione viene segnalato all'utente
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON DOCUMENTAZIONE"); //debug
 		    	
-		    	Desktop desktop = Desktop.getDesktop();
-		    	File path = new File("");
-		    	File docPath = new File(path.getAbsolutePath() + "\\doc\\allclasses-index.html");
+		    	desktop = Desktop.getDesktop();
+		    	path = new File("");
+		    	docPath = new File(path.getAbsolutePath() + "\\doc\\allclasses-index.html");
 		    	try 
 		    	{
 					desktop.open(docPath);
@@ -276,6 +317,8 @@ public class Menu
 		    	catch (IllegalArgumentException e1)
 		    	{
 		    		//TODO: aggiungere l'opzione per accedere a documentazione online
+		    		/** Popup che segnala all'utente che non è stata trovata la documentazione e 
+		    		 * in che percorso e' stata cercata */
 		    		e1.printStackTrace();
 		    		String messaggio = "File documentazione non trovato nel percorso \n" + path.getAbsolutePath();
 		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
@@ -290,9 +333,13 @@ public class Menu
 		
 		opzioneMenuHelp2.addActionListener(new ActionListener() 
 		{
+			/**	Apre la traccia d'esame nel visualizzatore standard per pdf del sistema operativo corrente.
+			 *  Se questa feature non e' disponibile viene segnalato all'utente 
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON TRACCIA"); //debug
+		    	System.out.println("BUTTON TRACCIA D'ESAME"); //debug
 		    	if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) 
 		    	{
 		    	    try 
@@ -315,10 +362,18 @@ public class Menu
 		    	}
 		    }
 		});
-
 	}
 	
-	//Salva la matrice e la sottomatrice su file binari aventi i nomi e i path specificati nel JFileChoser
+
+	/**	Salva la struttura dati principale e secondaria su file binari aventi i nomi e i path specificati nel JFileChoser
+	 * 	@param fos FileOutputStream
+	 * 	@param oos ObjectOutputStream
+	 * 	@param fos2 FileOutputStream
+	 * 	@param oos2 ObjectOutputStream
+	 * 	@param matrice Struttura dati principale
+	 * 	@param sottoMatrice Struttura dati secondaria
+	 * 	@param fileSaver Gestore del prompt interattivo per il salvataggio
+	 */
 	public void salvataggio(FileOutputStream fos, ObjectOutputStream oos, FileOutputStream fos2, ObjectOutputStream oos2, 
 			ArrayList<CellaGenerica> matrice[], Displayer sottoMatrice, JFileChooser fileSaver)
 	{
@@ -329,6 +384,7 @@ public class Menu
 			oos.writeObject(matrice);
 			oos.close();
 			
+			/** Per differenziare la struttura dati secondaria dalla primaria verrà aggiunto un suffisso <b>".sottoMatrice"</b> */
 			fos2 = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
 			oos2 = new ObjectOutputStream(fos2);
 			oos2.writeObject(sottoMatrice);
