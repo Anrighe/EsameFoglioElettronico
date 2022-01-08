@@ -22,8 +22,10 @@ import javax.swing.*;
  */ 
 public class Menu 
 {		
+	/** Usata per ottenere l'attuale percorso assoluto */
 	private File currentPath;
 	
+	/** Gestisce il caricamento interattivo dei dati da file  */
 	private JFileChooser fileOpener;
 	
 	private FileInputStream fis;
@@ -31,6 +33,7 @@ public class Menu
 	private FileInputStream fis2;
 	private ObjectInputStream ois2;
 	
+	/** Gestisce il salvataggio interattivo su file */
 	private JFileChooser fileSaver;
 	
 	private FileOutputStream fos;
@@ -38,6 +41,29 @@ public class Menu
 	private FileOutputStream fos2;
 	private ObjectOutputStream oos2;
 	
+	/**	Configurazione delle varie funzionalità del menu:
+	 * 	<p>- &emsp;<b>Nuovo</b>: termina la sessione corrente e apre una nuova finestra di foglio vuoto</p>
+	 *	<p>- &emsp;<b>Apri</b>: permette di caricare un foglio elettronico da un file binario tramite un prompt interattivo</p>
+	 *	<p>- &emsp;<b>Salva con nome</b>: permette di salvare l'attuale foglio elettronico su un file binario tramite un prompt interattivo</p>
+	 *	<p>- &emsp;<b>Esci</b>: termina la sessione corrente</p>
+	 *	<p>- &emsp;<b>Tema</b>: permette di personalizzare il tema</p>
+	 *	<p>- &emsp;<b>Documentazione</b>: apre la documentazione del progetto</p>
+	 *	<p>- &emsp;<b>Traccia d'esame</b>: apre la traccia d'esame</p>
+	 * @param dim Dimensione di altezza e larghezza del foglio elettronico
+	 * @param dati 
+	 * @param table
+	 * @param finestra Gestore del JFrame
+	 * @param opzioneMenuFile1 Opzione <b>Nuovo</b> del menu <b>File</b>
+	 * @param opzioneMenuFile2 Opzione <b>Apri</b> del menu <b>File</b>
+	 * @param opzioneMenuFile3 Opzione <b>Salva con nome</b> del menu <b>File</b>
+	 * @param opzioneMenuFile4 Opzione <b>Esci</b> del menu <b>File</b>
+	 * @param opzioneSottomenuTema1 Opzione <b>Tema 1</b> del sottomenu <b>Tema</b>
+	 * @param opzioneSottomenuTema2 Opzione <b>Tema 2</b> del sottomenu <b>Tema</b>
+	 * @param opzioneMenuHelp1 Opzione <b>Documentazione</b> del menu <b>Aiuto</b>
+	 * @param opzioneMenuHelp2 Opzione <b>Traccia d'esame</b> del menu <b>Aiuto</b>
+	 * @param matrice Struttra dati primaria
+	 * @param sottoMatrice Struttra dati secondaria
+	 */
 	public Menu(int dim, DefaultTableModel dati, JTable table, Frame finestra, 
 			JMenuItem opzioneMenuFile1, JMenuItem opzioneMenuFile2, 
 			JMenuItem opzioneMenuFile3, JMenuItem opzioneMenuFile4,
@@ -47,17 +73,22 @@ public class Menu
 	{
 		opzioneMenuFile1.addActionListener(new ActionListener() 
 		{
+			/**	Termina la sessione corrente e apre un nuovo foglio elettronico
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON NEW"); //debug
 		    	finestra.getF().dispose();
-		    	@SuppressWarnings("unused")
-				Inizializzatore foglioElettronico = new Inizializzatore();
+				new Inizializzatore();
 		    }
 		});
 		
 		opzioneMenuFile2.addActionListener(new ActionListener() 
 		{
+			/**	
+			 * 	@param e
+			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
 		    	System.out.println("BUTTON OPEN"); //debug

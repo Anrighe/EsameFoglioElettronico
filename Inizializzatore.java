@@ -122,10 +122,10 @@ public class Inizializzatore
 	/** Menu <b>Tema</b> */ 
 	private JMenu sottomenuTema;
 	
-    /** Opzione <b>Tema</b> del sottomenu <b>Tema</b> */
+    /** Opzione <b>Tema 1</b> del sottomenu <b>Tema</b> */
 	private JMenuItem opzioneSottomenuTema1;
 	
-    /** Opzione <b>Tema</b> del sottomenu <b>Tema</b> */
+    /** Opzione <b>Tema 1</b> del sottomenu <b>Tema</b> */
 	private JMenuItem opzioneSottomenuTema2;
 	
 	/** Contenitore per le opzioni del menu <b>Aiuto</b> */ 
@@ -164,12 +164,13 @@ public class Inizializzatore
 	 * 	<p>- &emsp;Istanzia il listener delle modifiche avvenute al JTable, il quale:</p>
 	 * 	<p>  &emsp;&emsp;-&emsp;Controlla se la cella modificata contiene testo, numeri, un'operazione o se e' vuota</p>
 	 * 	<p>  &emsp;&emsp;-&emsp;Converte la cella modificata alla tipo coerente con la modifica, aggiornando le due strutture dati</p>
-	 *  <p>  &emsp;&emsp;-&emsp;Gestisce il thread per l'autosavataggio</p>
+	 *  <p>  &emsp;&emsp;-&emsp;Gestisce la procedura di autosalvataggio con thread su file temporaneo</p>
 	 * 	<p>- &emsp;Configura ed inizializza le componenti grafiche</p>
 	 */
 	@SuppressWarnings("unchecked")
 	public Inizializzatore()
 	{
+		/** Inserimento nella struttura dati principale di elementi di tipo CellaGenerica e creazione della struttura dati secondaria */
 		matrice = new ArrayList[dim];
 		sottoMatrice = new Displayer(dim);
 		for (int i = 0; i < dim; i++)
@@ -237,7 +238,7 @@ public class Inizializzatore
 		{	
 			
 			/** Metodo invocato ad ogni modifica del JTable
-			 *  @param listenerModifica
+			 *  @param listenerModifica 
 			 */
 			public void tableChanged(TableModelEvent listenerModifica) 
 			{
@@ -334,25 +335,11 @@ public class Inizializzatore
 				System.out.println("Contenuto struttura dati:"); //debug
 				for (int i = 0; i < dim; ++i) //debug
 					System.out.println(matrice[i]); //debug
-				/*
-				System.out.println("Contenuto sottostruttura dati:"); //debug
-				for (int i = 0; i < dim; ++i) //debug
-				{
-					for (int j = 0; j < dim; ++j) //debug
-						System.out.print(sottoMatrice.getDisplayer()[i][j]); //debug
-					System.out.println();
-				}*/
 
 				/** Stampa del contenuto e del tipo della cella selezionata nel JTextField */
 				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
 				classeCellaSelezionata = "     \t\t\tTipo cella selezionato: " + classeCellaSelezionata.substring(6);
 				operationDisplayer.setText("Contenuto cella: " + sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] + classeCellaSelezionata);
-				
-				
-				//TODO: Il thread viene creato nuovamente ogni volta che viene istanziato
-				//un nuovo oggetto di tipo inizializzatore e non muore. Devo trovare un modo per eliminare quello
-				//attualmente in funzione.
-				//Il thread non riesce a salvare la sottomatrice
 				
 				/** Creazione di un Thread predisposto al salvataggio delle due strutture dati se non e' ancora stato creato uno in precedenza */
 				if (threadCreato == false)
@@ -366,7 +353,6 @@ public class Inizializzatore
 				    	/**	Metodo eseguito dal Thread */
 				        public synchronized void run() 
 				        {
-				        	
 				        	System.out.println("CONTROLLO SE CI SONO CELLE SELEZIONATE"); //debug
 				        	if (!table.isEditing())
 				        	{
@@ -390,12 +376,13 @@ public class Inizializzatore
 				        			oos2.writeObject(sottoMatrice);
 				        			oos2.close();
 				        			
-									for (int i = 0; i < dim; ++i)
+									for (int i = 0; i < dim; ++i) 
 									{
 										for (int j = 1; j < dim; ++j) 
-											System.out.print(sottoMatrice.getDisplayer()[i][j] + ",");
+											System.out.print(sottoMatrice.getDisplayer()[i][j] + ","); //debug
 										System.out.println();
 									}
+									
 				        		}
 				        		catch (FileNotFoundException e1) 
 				        		{
@@ -405,9 +392,7 @@ public class Inizializzatore
 				        		{
 				        			e1.printStackTrace();
 				        		}
-				        		
 				        	}
-				        	
 				        }
 				    };
 				    
@@ -417,7 +402,7 @@ public class Inizializzatore
 				    /** Abilitazione dell'esecuzione del salvataggio automatico dopo il ritardo iniziale di [<b>delaySalvataggio</b>] secondi, a periodi regolari definiti dalla variabile timerAutosalvataggio */
 				    executor.scheduleAtFixedRate(salvataggioAutomatico, delaySalvataggio, timerAutosalvataggio, TimeUnit.SECONDS);
 				    
-				    //se viene aperta una nuova finestra interrompi i thread 
+				    /** Se viene aperta una nuova finestra attraverso il bottone "Nuovo" interrompi i thread correntemente in uso */
 					opzioneMenuFile1.addActionListener(new ActionListener() 
 					{
 					    public void actionPerformed(ActionEvent e)
@@ -481,7 +466,7 @@ public class Inizializzatore
 
         /** Inizializzazione JTable e JScrollPane */
 		table.setCellSelectionEnabled(true);
-		table.setBackground(new Color(232, 255, 250)); //TODO: IMPLEMENTA DARK THEME
+		table.setBackground(new Color(232, 255, 250));
 		table.setRowHeight(22);
 		
 		/** Imposta la prima colonna con background grigio e testo allineato al centro e le barre di scorrimento */
