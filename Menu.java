@@ -228,7 +228,6 @@ public class Menu
 		    			
 		    			promptConferma.getBottoneSi().addActionListener(new ActionListener()
 		    			{
-		    				//TODO: Chiedere a Matt se questo è un Override
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
@@ -242,7 +241,6 @@ public class Menu
 		    			
 		    			promptConferma.getBottoneNo().addActionListener(new ActionListener()
 		    			{
-							//TODO: Chiedere a Matt se questo è un Override
 		    				@Override
 							public void actionPerformed(ActionEvent e) 
 							{
@@ -321,7 +319,7 @@ public class Menu
 		    		 * in che percorso e' stata cercata */
 		    		e1.printStackTrace();
 		    		String messaggio = "File documentazione non trovato nel percorso \n" + path.getAbsolutePath();
-		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);
+		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);        
 		    	}
 
 		    	catch (IOException e1) 

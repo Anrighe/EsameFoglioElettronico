@@ -10,6 +10,7 @@ public class Displayer implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
+	/** Matrice di String responsabile della memorizzazione delle operazioni che hanno portato ad un determinato risultato sulle celle */
 	private String displayer[][];
 	
 	/**	Ritorna la matrice di String displayer

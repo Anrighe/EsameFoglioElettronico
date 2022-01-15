@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -480,6 +481,9 @@ public class Inizializzatore
 	    
 	    /** Evita che la JTable non ridimensioni automaticamente la colonne al variare della finestra */
 	    table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF); 
+	    
+	    /** Abilita la JTable a selezionare più righe e colonne contigue con il tasto CTRL */
+	    table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 	    
 	    finestra = new Frame(pannelloNord, sp);
 	    finestra.getF().setVisible(true);
