@@ -22,7 +22,7 @@ import javax.swing.*;
  */ 
 public class Menu 
 {		
-	/** Usata per ottenere l'attuale percorso assoluto */
+	/** Attuale percorso assoluto */
 	private File currentPath;
 	
 	/** Gestisce il caricamento interattivo dei dati da file  */
@@ -42,7 +42,7 @@ public class Menu
 	private FileOutputStream fos2;
 	private ObjectOutputStream oos2;
 	
-	/** Usata per aprire la traccia d'esame */
+	/** Per apertura traccia d'esame */
 	private Desktop desktop;
 	
 	/** Utilizzata per ottenere il percorso assoluto corrente */
@@ -162,8 +162,8 @@ public class Menu
 						fis2 = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
 						ois2 = new ObjectInputStream(fis2);
 						
-						/** Displayer di appoggio usata per caricare la struttura dati secondaria dal file binario con 
-						 * suffisso <b>.sottoMatrice</b> */
+						/** Displayer di appoggio per il caricamento della struttura dati secondaria 
+						 * dal file binario con suffisso <b>.sottoMatrice</b> */
 						Displayer sottoMatriceTmp = (Displayer) ois2.readObject();
 						
 						/** Assegnamento della struttura dati secondaria da quella di appoggio */

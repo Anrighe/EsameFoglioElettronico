@@ -25,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-/**	Classe che gestisce la creazione le componenti del foglio elettronico
+/**	Gestisce la creazione le componenti del foglio elettronico
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
@@ -87,7 +87,7 @@ public class Inizializzatore
 	private boolean threadCreato = false; 
 	
 	/** Delay in secondi del salvataggio automatico */
-	private final int delaySalvataggio = 2;
+	private final int delaySalvataggio = 5;
 	
 	/** Intervallo di secondi che separa ogni salvataggio automatico */
 	private final int timerAutosalvataggio = 20; 
@@ -146,8 +146,10 @@ public class Inizializzatore
 	/** Opzione <b>Traccia d'esame</b> del menu <b>Aiuto</b> */
 	private JMenuItem opzioneMenuHelp2;
 	
+	/** Contiene il menu */
 	private JPanel pannelloNordUpper;
 	
+	/** Contiene il JPanel pannelloNordUpper e il JTextField */
 	private JPanel pannelloNord;
     
 	/** Imposta l'allineamento a sinistra del pannello <b>pannelloNordUpper</b> */

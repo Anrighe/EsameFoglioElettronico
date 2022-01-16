@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-/**	Classe che crea la struttura dati secondaria utilizzata per memorizzare cos'era precedentemente una cella
+/**	Crea la struttura dati secondaria utilizzata per memorizzare cos'era precedentemente una cella
  * 	<p>Nel caso di una cella di tipo operazione memorizza la stringa che ha determinato un risultato e in tutti gli altri casi memorizza il contenuto attuale della cella</p>
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17

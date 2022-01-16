@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
-/**	
+/**	Cella che contiene una formula tra coordinate di celle o tra valori numerici.
+ * 	<p>Per essere convertita al tipo <b>CellaOperazione</b>, una cella deve contenere una delle due seguenti opzioni:</p>
+ * 	<p>- &emsp;Addizioni e sottrazioni tra coordinate di celle del tipo: <b>=A1+A2</b></p>
+ * 	<p>- &emsp;Addizioni e sottrazioni tra valori numerici del tipo: <b>=300+22</b></p>
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
@@ -170,8 +172,8 @@ public class CellaOperazione extends CellaGenerica
 			
 			System.out.println("cell1: " + cell1);
 			System.out.println("cell2: " + cell2);
-			System.out.println("tmp1: " + tmp1); //tmp1 è ancora String va convertito in int e assegnato a rowCell1
-			System.out.println("tmp2: " + tmp2); //tmp2 è ancora String va convertito in int e assegnato a rowCell2
+			System.out.println("tmp1: " + tmp1); //tmp1 e' ancora String va convertito in int e assegnato a rowCell1
+			System.out.println("tmp2: " + tmp2); //tmp2 e' ancora String va convertito in int e assegnato a rowCell2
 			
 			rowCell1 = Integer.valueOf(tmp1); //conversione di tmp1 ad intero
 			rowCell2 = Integer.valueOf(tmp2); //conversione di tmp2 ad intero

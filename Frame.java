@@ -3,7 +3,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-/**	Classe che gestisce la creazione e la configurazione del JPanel
+/**	Gestisce la creazione e la configurazione del JPanel
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
