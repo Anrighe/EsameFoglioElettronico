@@ -25,7 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-
 /**	Classe che gestisce la creazione le componenti del foglio elettronico
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
@@ -47,7 +46,7 @@ public class Inizializzatore
 	 * 	<p>Per maggiori informazioni visionare la classe <b>Displayer</b></p> */ 
 	private Displayer sottoMatrice; 
 	
-	/** Array utilizzato per impostare i nomi delle colonne del DefaultTableModel a lettere ordinate alfabeticamente */
+	/** Contiene i nomi delle colonne del DefaultTableModel a lettere ordinate alfabeticamente */
 	private String nomeColonne[];
 	
 	private DefaultTableModel dati;
@@ -84,7 +83,7 @@ public class Inizializzatore
 	/** True se la cella e' di tipo <b>CellaOperazione</b> */
 	private boolean ritMatcherOperazione = false; 
 	
-	/** Monitora che monitora se e' gia' stato creato un thread */
+	/** Monitora se e' gia' stato creato un thread */
 	private boolean threadCreato = false; 
 	
 	/** Delay in secondi del salvataggio automatico */
@@ -93,7 +92,13 @@ public class Inizializzatore
 	/** Intervallo di secondi che separa ogni salvataggio automatico */
 	private final int timerAutosalvataggio = 20; 
 	
-	/** Usata per ottenere l'attuale percorso assoluto */
+	/** Sistema operativo correntemente in uso */
+	private String OS;
+	
+	/** Nome dell'estensione del file binario per il salvataggio automatico */
+	private String nomeAutosalvataggio;
+	
+	/** Attuale percorso assoluto */
 	private File percorsoCorrente; 
 	
 	/** Contenitore per le opzioni del menu <b>File</b> */ 
@@ -145,13 +150,13 @@ public class Inizializzatore
 	
 	private JPanel pannelloNord;
     
-	/** Utilizzata per impostare l'allineamento a sinistra del pannello <b>pannelloNordUpper</b> */
+	/** Imposta l'allineamento a sinistra del pannello <b>pannelloNordUpper</b> */
 	private FlowLayout leftAlignment;
 	
-	/** Per implementare le barre di scorrimento orizzontali e verticali */
+	/** Implementare le barre di scorrimento orizzontali e verticali */
 	private JScrollPane sp;
 	
-	/** Per impostare colore e allineamento testo della prima colonna */
+	/** Impostare colore e allineamento testo della prima colonna */
 	private DefaultTableCellRenderer setPrimaColonna;
 	
 	/** Crea ed imposta il JFrame.
@@ -261,11 +266,11 @@ public class Inizializzatore
 				
 				if (!text.equals(""))
 				{
-					/** Controlla se nella cella è contenuta un'addizione o una sottrazione del tipo <i>=A1±A2</i> */
+					/** Controlla se nella cella e' contenuta un'addizione o una sottrazione del tipo <i>=A1±A2</i> */
 					patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$|^=[0-9]++[\\+|-][0-9]++$");
 					matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
-					System.out.println("Operazione: " + ritMatcherOperazione); //debug: stampa true se è un'operazione
+					System.out.println("Operazione: " + ritMatcherOperazione); //debug: stampa true se e' un'operazione
 					
 					/** Controllo se la cella contiene solo numeri */
 					patternNumeri = Pattern.compile("^-{0,1}[0-9]+$");
@@ -273,11 +278,11 @@ public class Inizializzatore
 					ritMatcherNumeri = matcherNumeri.find();	
 					System.out.println("Numeri: " + ritMatcherNumeri); //debug: stampa true se sono numeri
 					
-					/** Se il contenuto della cella non è nullo e non contiene formule o numeri, allora la cella contiene del testo */
+					/** Se il contenuto della cella non e' nullo e non contiene formule o numeri, allora la cella contiene del testo */
 					if (ritMatcherNumeri == false && ritMatcherOperazione == false)
 					{	
 						ritMatcherTesto = true;
-						System.out.println("Testo : " + ritMatcherTesto); //debug: stampa true se è testo
+						System.out.println("Testo : " + ritMatcherTesto); //debug: stampa true se e' testo
 					}
 				}
 				
@@ -363,16 +368,26 @@ public class Inizializzatore
 				        		
 				        		try 
 				        		{
+				        			
+				        			/** In base al sistema operativo in uso cambio il percorso per il salvataggio automatico */
+				        			OS = System.getProperty("os.name");
+				        			System.out.println("OS: " + OS); //debug
+				        			
+				        			if (OS.contains("Windows") || OS.contains("Windows 10") || OS.contains("Windows 11"))
+				        				nomeAutosalvataggio = "\\autosave";
+				        			else
+				        				nomeAutosalvataggio = "/autosave";
+				        			
 				        			System.out.println("ENTRO TRY CATCH AUTOSAVE"); //debug
 				        			
-				        			/** Salvataggio la struttura dati principale su file binario con suffisso ".autosave" */
-				        			FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave");
+				        			/** Salvataggio la struttura dati principale su file binario con nome "autosave" */
+				        			FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + nomeAutosalvataggio);
 				        			ObjectOutputStream oos = new ObjectOutputStream(fos);
 				        			oos.writeObject(matrice);
 				        			oos.close();
 				        			
-				        			/** Salvataggio la sottomatrice su file binario con suffisso ".autosave.sottomatrice" */
-				        			FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + "\\.autosave.sottoMatrice");
+				        			/** Salvataggio la sottomatrice su file binario con suffisso "autosave.sottomatrice" */
+				        			FileOutputStream fos2 = new FileOutputStream(percorsoCorrente.getAbsolutePath() + nomeAutosalvataggio + ".sottoMatrice");
 				        			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
 				        			oos2.writeObject(sottoMatrice);
 				        			oos2.close();

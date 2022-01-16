@@ -51,7 +51,13 @@ public class Menu
 	/** Utilizzata per aprire la documentazione */
 	private File docPath;
 	
-	/**	Configurazione delle varie funzionalità del menu:
+	/** Sistema operativo correntemente in uso */
+	private String OS;
+	
+	/** Nome del corretto percorso della documentazione */
+	private String percorsoDocumentazione;
+	
+	/**	Configurazione delle varie funzionalita' del menu:
 	 * 	<p>- &emsp;<b>Nuovo</b>: termina la sessione corrente e apre una nuova finestra di foglio vuoto</p>
 	 *	<p>- &emsp;<b>Apri</b>: permette di caricare un foglio elettronico da un file binario tramite un prompt interattivo</p>
 	 *	<p>- &emsp;<b>Salva con nome</b>: permette di salvare l'attuale foglio elettronico su un file binario tramite un prompt interattivo</p>
@@ -97,7 +103,7 @@ public class Menu
 		opzioneMenuFile2.addActionListener(new ActionListener() 
 		{
 			/**	Apre un prompt interattivo che permette di scegliere il file binario da aprire per caricare il foglio elettronico.
-			 * 	È necessario aprire il file del nome esatto che si è salvato e il file secondario con suffiso "<b>.sottoMatrice</b>"
+			 * 	E' necessario aprire il file del nome esatto che si e' salvato e il file secondario con suffiso "<b>.sottoMatrice</b>"
 			 * 	@param e
 			 */
 		    public void actionPerformed(ActionEvent e)
@@ -113,7 +119,7 @@ public class Menu
 		    	
 		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
-		    		System.out.println("È stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath()); //debug
+		    		System.out.println("E' stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath()); //debug
 
 		    		try 
 		    		{
@@ -137,8 +143,8 @@ public class Menu
 							System.out.println(matrice[i]);
 						
 						//TODO: commento da eliminare?
-						//è necessario ripetere due volte la procedura affinché vada a buon fine: 
-						//la prima volta darà un out of bounds exception perché non avendo celle selezionate
+						//e' necessario ripetere due volte la procedura affinche' vada a buon fine: 
+						//la prima volta dara' un out of bounds exception perche' non avendo celle selezionate
 						//getSelectedColumn e getSelectedRows ritornano -1
 						
 						/** Reset della cella selezionata per evitare l'ArrayOutOfBoundsException sollevato dal 
@@ -221,7 +227,7 @@ public class Menu
 		    		 */
 		    		if (esisteFileMatrice == true)
 		    		{
-		    			System.out.println("IL FILE ESISTE GIà"); //debug
+		    			System.out.println("IL FILE ESISTE GIA'"); //debug
 		    			
 		    			Conferma promptConferma = new Conferma();
 		    			
@@ -253,7 +259,7 @@ public class Menu
 		    		{
 		    			System.out.println("ENTRO ELSE SALVATAGGIO"); //debug
 		    			salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
-		    			System.out.println("È stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath()); //debug
+		    			System.out.println("E' stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath()); //debug
 		    		}
 		    	}
 		    }
@@ -297,7 +303,7 @@ public class Menu
 		
 		opzioneMenuHelp1.addActionListener(new ActionListener() 
 		{
-			/**	Cerca la documentazione nel percorso assoluto in cui è stato compilato il progetto.
+			/**	Cerca la documentazione nel percorso assoluto in cui e' stato compilato il progetto.
 			 * 	In caso non sia presente la documentazione viene segnalato all'utente
 			 * 	@param e
 			 */
@@ -305,9 +311,19 @@ public class Menu
 		    {
 		    	System.out.println("BUTTON DOCUMENTAZIONE"); //debug
 		    	
+    			/** In base al sistema operativo in uso cambio il percorso alla documentazione */
+    			OS = System.getProperty("os.name");
+    			System.out.println("OS: " + OS); //debug
+    			
+    			if (OS.contains("Windows") || OS.contains("Windows 10") || OS.contains("Windows 11"))
+    				percorsoDocumentazione = "\\Documentazione\\allclasses-index.html";
+    			else
+    				percorsoDocumentazione = "/Documentazione/allclasses-index.html";
+		    	
+		    	
 		    	desktop = Desktop.getDesktop();
 		    	path = new File("");
-		    	docPath = new File(path.getAbsolutePath() + "\\doc\\allclasses-index.html");
+		    	docPath = new File(path.getAbsolutePath() + percorsoDocumentazione);
 		    	try 
 		    	{
 					desktop.open(docPath);
@@ -315,8 +331,9 @@ public class Menu
 		    	catch (IllegalArgumentException e1)
 		    	{
 		    		//TODO: aggiungere l'opzione per accedere a documentazione online
-		    		/** Popup che segnala all'utente che non è stata trovata la documentazione e 
-		    		 * in che percorso e' stata cercata */
+		    		
+		    		/** Popup che segnala all'utente che non e' stata trovata la documentazione e 
+		    		 * 	in che percorso e' stata cercata */
 		    		e1.printStackTrace();
 		    		String messaggio = "File documentazione non trovato nel percorso \n" + path.getAbsolutePath();
 		    		JOptionPane.showMessageDialog(null, messaggio, "Errore", JOptionPane.INFORMATION_MESSAGE);        
@@ -382,7 +399,7 @@ public class Menu
 			oos.writeObject(matrice);
 			oos.close();
 			
-			/** Per differenziare la struttura dati secondaria dalla primaria verrà aggiunto un suffisso <b>".sottoMatrice"</b> */
+			/** Per differenziare la struttura dati secondaria dalla primaria verra' aggiunto un suffisso <b>".sottoMatrice"</b> */
 			fos2 = new FileOutputStream(fileSaver.getSelectedFile().getAbsolutePath() + ".sottoMatrice");
 			oos2 = new ObjectOutputStream(fos2);
 			oos2.writeObject(sottoMatrice);
