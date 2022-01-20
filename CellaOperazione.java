@@ -117,12 +117,7 @@ public class CellaOperazione extends CellaGenerica
 		
 		if (ritMatcherOperazioniNumeri == true) /** Operazione tra numeri */
 		{
-			System.out.println("OPERAZIONE TRA NUMERI - " + text); //debug
-			//TODO: ridurre l'uso del codice doppiato da sotto
-			
 			operazioneValida = true;
-			System.out.println("Plus: " + plus); //debug
-			System.out.println("Minus: " + minus); //debug
 			
 			cell1 = String.valueOf(text.charAt(1));
 			cell2 = String.valueOf(text.charAt(posSegno+1));
@@ -133,9 +128,6 @@ public class CellaOperazione extends CellaGenerica
 			for (int i = posSegno+2; i < text.length(); i++)
 				cell2 = cell2 + String.valueOf(text.charAt(i));
 			
-			System.out.println("Cell1: " + cell1); //debug
-			System.out.println("Cell2: " + cell2); //debug
-			
 			if (addizione == true)
 				result = Integer.valueOf(cell1) + Integer.valueOf(cell2);
 			else
@@ -143,7 +135,6 @@ public class CellaOperazione extends CellaGenerica
 		}
 		else /** Operazione tra coordinate di celle */
 		{
-			System.out.println("OPERAZIONE TRA INDIRIZZI - " + text); //debug
 			rifMatrice = matrice;
 			
 			/*	Nel caso di =A1+A2
@@ -169,24 +160,10 @@ public class CellaOperazione extends CellaGenerica
 			for (int i = 1; i < cell2.length(); i++)
 				tmp2 = tmp2 + String.valueOf(cell2.charAt(i));
 			
+			/** Conversione di tmp1 e tmp2 ad intero */
+			rowCell1 = Integer.valueOf(tmp1);
+			rowCell2 = Integer.valueOf(tmp2);
 			
-			System.out.println("cell1: " + cell1);
-			System.out.println("cell2: " + cell2);
-			System.out.println("tmp1: " + tmp1); //tmp1 e' ancora String va convertito in int e assegnato a rowCell1
-			System.out.println("tmp2: " + tmp2); //tmp2 e' ancora String va convertito in int e assegnato a rowCell2
-			
-			rowCell1 = Integer.valueOf(tmp1); //conversione di tmp1 ad intero
-			rowCell2 = Integer.valueOf(tmp2); //conversione di tmp2 ad intero
-			
-			System.out.println("cell1: " + cell1); //debug
-			System.out.println("cell2: " + cell2); //debug
-			System.out.println("colCell1:" + colCell1); //debug
-			System.out.println("colCell2:" + colCell2); //debug
-			System.out.println("rowCell1:" + rowCell1); //debug
-			System.out.println("rowCell2:" + rowCell2); //debug
-			
-			System.out.println("operatore1: " + matrice[rowCell1-1].get(colCell1).getContCellInt()); //debug
-			System.out.println("operatore2: " + matrice[rowCell2-1].get(colCell2).getContCellInt()); //debug
 			
 			operazioneValida = isValidOperation(matrice);
 			
@@ -195,12 +172,10 @@ public class CellaOperazione extends CellaGenerica
 				if (addizione == true) /** L'operazione e' un'addizione */
 				{
 					result = matrice[rowCell1-1].get(colCell1).getContCellInt() + matrice[rowCell2-1].get(colCell2).getContCellInt();
-					System.out.println("Result: " + result); //debug
 				}
 				else /** L'operazione e' una sottrazione */
 				{
 					result = matrice[rowCell1-1].get(colCell1).getContCellInt() - matrice[rowCell2-1].get(colCell2).getContCellInt();
-					System.out.println("Result: " + result); //debug
 				}
 			}
 		}

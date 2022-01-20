@@ -229,7 +229,7 @@ public class Inizializzatore
 				else
 				{
 					for (int cicla = 0; cicla < dim; cicla++)
-						dati.setValueAt(matrice[j].get(cicla).toString(), i, j);
+						dati.setValueAt(matrice[j].get(cicla).toString(), i, j); /** Comportamento polimorfico di toString() -> esecuzione di toString() di CellaGenerica.java */
 				}
 			}
 		}
@@ -255,16 +255,11 @@ public class Inizializzatore
 				ritMatcherNumeri = false;
 				ritMatcherOperazione = false;
 				
-				System.out.println("Contenuto cella modificato: " + table.getValueAt(table.getSelectedRow(), table.getSelectedColumn())); //debug
-				
-				System.out.println("RIGA SELEZIONATA: " + table.getSelectedRow()); //debug
-				System.out.println("COLONNA SELEZIONATA: " + table.getSelectedColumn()); //debug
 				
 				/** Cattura il testo inserito in una cella del JTable */
 				String text;
 				text = (String) table.getValueAt(table.getSelectedRow(), table.getSelectedColumn());
 				
-				System.out.println("text: " + text); //debug
 				
 				if (!text.equals(""))
 				{
@@ -272,19 +267,16 @@ public class Inizializzatore
 					patternOperazioni = Pattern.compile("^=[A-Z][1-2]{0,1}[0-9][\\+|-][A-Z][1-2]{0,1}[0-9]$|^=[0-9]++[\\+|-][0-9]++$");
 					matcherOperazioni = patternOperazioni.matcher(text);
 					ritMatcherOperazione = matcherOperazioni.find();
-					System.out.println("Operazione: " + ritMatcherOperazione); //debug: stampa true se e' un'operazione
 					
 					/** Controllo se la cella contiene solo numeri */
 					patternNumeri = Pattern.compile("^-{0,1}[0-9]+$");
 					matcherNumeri = patternNumeri.matcher(text);
 					ritMatcherNumeri = matcherNumeri.find();	
-					System.out.println("Numeri: " + ritMatcherNumeri); //debug: stampa true se sono numeri
 					
 					/** Se il contenuto della cella non e' nullo e non contiene formule o numeri, allora la cella contiene del testo */
 					if (ritMatcherNumeri == false && ritMatcherOperazione == false)
 					{	
 						ritMatcherTesto = true;
-						System.out.println("Testo : " + ritMatcherTesto); //debug: stampa true se e' testo
 					}
 				}
 				
@@ -310,9 +302,8 @@ public class Inizializzatore
 						sottoMatrice.getDisplayer()[table.getSelectedRow()][table.getSelectedColumn()] = text;
 					}
 					
-					System.out.println("ENTRO IN CONVERSIONE CELLA NUMERICA"); //debug
-					
-					/** TODO: REVISIONARE COMMENTO: Comportamento polimorfico di getContCell(): ritorna il contenuto della cella */
+					/** Comportamento polimorfico di getContCell() -> esecuzione di getContCell() di CellaNumeri.java
+					 * : ritorna il contenuto della cella */
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaNumeri(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getContCell()));
 				}
 				
@@ -326,23 +317,16 @@ public class Inizializzatore
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(),
 							new CellaOperazione(matrice, table, text));
 					
-					/** Assegnazione del dato di ritorno della CellaOperazione al DefaultTableModel */
+					/** Comportamento polimorfico di toString() -> esecuzione di toString() di CellaOperazione.java: 
+					 * Assegnazione del dato di ritorno della CellaOperazione al DefaultTableModel */
 					dati.setValueAt(matrice[table.getSelectedRow()].get(table.getSelectedColumn()).toString(), table.getSelectedRow(), table.getSelectedColumn());
-					
 				}
 				
 				/** Se la cella non contiene testo, o numeri, o formule allora si tratta di una cella vuota, e dovra' essere riconvertita al tipo <b>CellaGenerica</b> */
 				if(ritMatcherTesto == false && ritMatcherNumeri == false && ritMatcherOperazione == false) 
 				{
-					System.out.println("La cella di riga: " + table.getSelectedColumn() + " e colonna: " + table.getSelectedColumn() + " diventa una cella generica"); //debug
 					matrice[table.getSelectedRow()].set(table.getSelectedColumn(), new CellaGenerica());
 				}
-				
-				System.out.println("Aggiorno il contenuto della cella di riga " + table.getSelectedRow() + " e colonna " + table.getSelectedColumn() + " a: " + text); //debug
-				
-				System.out.println("Contenuto struttura dati:"); //debug
-				for (int i = 0; i < dim; ++i) //debug
-					System.out.println(matrice[i]); //debug
 
 				/** Stampa del contenuto e del tipo della cella selezionata nel JTextField */
 				classeCellaSelezionata = matrice[table.getSelectedRow()].get(table.getSelectedColumn()).getClass() + "";
@@ -361,26 +345,17 @@ public class Inizializzatore
 				    	/**	Metodo eseguito dal Thread */
 				        public synchronized void run() 
 				        {
-				        	System.out.println("CONTROLLO SE CI SONO CELLE SELEZIONATE"); //debug
 				        	if (!table.isEditing())
-				        	{
-				        		System.out.println("NON SI STA EDITANDO NESSUNA CELLA"); //debug
-				        		System.out.println("SALVATAGGIO AUTOMATICO"); //debug
-				        		System.out.println(percorsoCorrente.getAbsolutePath()); //debug
-				        		
+				        	{				        		
 				        		try 
 				        		{
-				        			
 				        			/** In base al sistema operativo in uso cambio il percorso per il salvataggio automatico */
 				        			OS = System.getProperty("os.name");
-				        			System.out.println("OS: " + OS); //debug
 				        			
 				        			if (OS.contains("Windows") || OS.contains("Windows 10") || OS.contains("Windows 11"))
 				        				nomeAutosalvataggio = "\\autosave";
 				        			else
 				        				nomeAutosalvataggio = "/autosave";
-				        			
-				        			System.out.println("ENTRO TRY CATCH AUTOSAVE"); //debug
 				        			
 				        			/** Salvataggio la struttura dati principale su file binario con nome "autosave" */
 				        			FileOutputStream fos = new FileOutputStream(percorsoCorrente.getAbsolutePath() + nomeAutosalvataggio);
@@ -393,14 +368,6 @@ public class Inizializzatore
 				        			ObjectOutputStream oos2 = new ObjectOutputStream(fos2);
 				        			oos2.writeObject(sottoMatrice);
 				        			oos2.close();
-				        			
-									for (int i = 0; i < dim; ++i) 
-									{
-										for (int j = 1; j < dim; ++j) 
-											System.out.print(sottoMatrice.getDisplayer()[i][j] + ","); //debug
-										System.out.println();
-									}
-									
 				        		}
 				        		catch (FileNotFoundException e1) 
 				        		{
@@ -425,7 +392,6 @@ public class Inizializzatore
 					{
 					    public void actionPerformed(ActionEvent e)
 					    {
-					    	System.out.println("BUTTON NEW DENTRO INIZIALIZZATORE"); //debug
 					    	executor.shutdownNow();
 					    }
 					});

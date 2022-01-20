@@ -94,7 +94,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON NEW"); //debug
 		    	finestra.getF().dispose();
 				new Inizializzatore();
 		    }
@@ -107,9 +106,7 @@ public class Menu
 			 * 	@param e
 			 */
 		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON OPEN"); //debug
-		    	
+		    {		    	
 		    	//** Imposta il prompt interattivo per l'apertura del file */
 		    	fileOpener = new JFileChooser();
 		    	currentPath = new File(System.getProperty("user.dir"));
@@ -119,14 +116,11 @@ public class Menu
 		    	
 		    	if (fileOpener.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
 		    	{
-		    		System.out.println("E' stato selezionato il percorso " + fileOpener.getSelectedFile().getAbsolutePath()); //debug
-
 		    		try 
 		    		{
 						fis = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath());
 						ois = new ObjectInputStream(fis);
 						
-						System.out.println("Contenuto struttura dati prima del caricamento:"); //debug
 						for (int i = 0; i < dim; ++i) 
 							System.out.println(matrice[i]); 
 
@@ -138,7 +132,6 @@ public class Menu
 						for (int i = 0; i < dim; ++i)
 							matrice[i] = newMatrice[i];
 						
-						System.out.println("Contenuto struttura dati caricata:"); //debug
 						for (int i = 0; i < dim; ++i)
 							System.out.println(matrice[i]);
 						
@@ -204,8 +197,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON SAVE AS"); //debug
-		    	
 		    	//** Imposta il prompt di salvataggio interattivo */
 		    	fileSaver = new JFileChooser();
 		    	currentPath = new File(System.getProperty("user.dir"));
@@ -220,27 +211,20 @@ public class Menu
 		    		 * 	nel percorso selezionato */
 		    		boolean esisteFileMatrice = new File(fileSaver.getSelectedFile() + "").exists();
 		    		
-		    		System.out.println("FILE SELEZIONATO: " + fileSaver.getSelectedFile()); //debug
-		    		
 		    		/** Se e' gia' presente un file con lo stesso nome nel percorso selezionato viene chiesto all'utente
 		    		 * 	se desidera sovrascrivere il file 
 		    		 */
 		    		if (esisteFileMatrice == true)
 		    		{
-		    			System.out.println("IL FILE ESISTE GIA'"); //debug
-		    			
 		    			Conferma promptConferma = new Conferma();
-		    			
 		    			
 		    			promptConferma.getBottoneSi().addActionListener(new ActionListener()
 		    			{
 							@Override
 							public void actionPerformed(ActionEvent e) 
 							{
-								System.out.println("PREMUTO SI"); //debug
 								promptConferma.getPopUpConferma().dispose();
 
-								System.out.println("SOVRASCRIVO"); //debug
 								salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
 							}
 		    			});
@@ -250,16 +234,13 @@ public class Menu
 		    				@Override
 							public void actionPerformed(ActionEvent e) 
 							{
-								System.out.println("PREMUTO NO"); //debug
 								promptConferma.getPopUpConferma().dispose();
 							}
 		    			});
 		    		}
 		    		else
 		    		{
-		    			System.out.println("ENTRO ELSE SALVATAGGIO"); //debug
 		    			salvataggio(fos, oos, fos2, oos2, matrice, sottoMatrice, fileSaver);
-		    			System.out.println("E' stato selezionato il percorso " + fileSaver.getSelectedFile().getAbsolutePath()); //debug
 		    		}
 		    	}
 		    }
@@ -272,7 +253,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON ESCI"); //debug
 		    	System.exit(0);
 		    }
 		});
@@ -284,7 +264,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON TEMA1"); //debug
 		    	table.setBackground(new Color(232, 255, 250));
 		    }
 		});
@@ -296,7 +275,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON TEMA2"); //debug
 		    	table.setBackground(new Color(169, 185, 224));
 		    }
 		});
@@ -308,12 +286,9 @@ public class Menu
 			 * 	@param e
 			 */
 		    public void actionPerformed(ActionEvent e)
-		    {
-		    	System.out.println("BUTTON DOCUMENTAZIONE"); //debug
-		    	
+		    {		    	
     			/** In base al sistema operativo in uso cambio il percorso alla documentazione */
     			OS = System.getProperty("os.name");
-    			System.out.println("OS: " + OS); //debug
     			
     			if (OS.contains("Windows") || OS.contains("Windows 10") || OS.contains("Windows 11"))
     				percorsoDocumentazione = "\\Documentazione\\allclasses-index.html";
@@ -354,7 +329,6 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {
-		    	System.out.println("BUTTON TRACCIA D'ESAME"); //debug
 		    	if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) 
 		    	{
 		    	    try 
