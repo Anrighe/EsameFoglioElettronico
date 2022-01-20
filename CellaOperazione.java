@@ -97,7 +97,6 @@ public class CellaOperazione extends CellaGenerica
 		Matcher matcherOperazioniNumeri = patternOperazioniNumeri.matcher(text);
 		ritMatcherOperazioniNumeri = matcherOperazioniNumeri.find();
 		
-		System.out.println("ENTRO IN CONVERSIONE CELLA OPERAZIONE");
 		
 		int plus = text.indexOf("+");
 		int minus = text.indexOf("-");
@@ -171,11 +170,11 @@ public class CellaOperazione extends CellaGenerica
 			{
 				if (addizione == true) /** L'operazione e' un'addizione */
 				{
-					result = matrice[rowCell1-1].get(colCell1).getContCellInt() + matrice[rowCell2-1].get(colCell2).getContCellInt();
+					result = ((CellaNumeri)matrice[rowCell1-1].get(colCell1)).getContCellInt() + ((CellaNumeri)matrice[rowCell2-1].get(colCell2)).getContCellInt();
 				}
 				else /** L'operazione e' una sottrazione */
 				{
-					result = matrice[rowCell1-1].get(colCell1).getContCellInt() - matrice[rowCell2-1].get(colCell2).getContCellInt();
+					result = ((CellaNumeri)matrice[rowCell1-1].get(colCell1)).getContCellInt() - ((CellaNumeri)matrice[rowCell2-1].get(colCell2)).getContCellInt();
 				}
 			}
 		}

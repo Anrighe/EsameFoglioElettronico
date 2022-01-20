@@ -107,7 +107,7 @@ public class Menu
 			 */
 		    public void actionPerformed(ActionEvent e)
 		    {		    	
-		    	//** Imposta il prompt interattivo per l'apertura del file */
+		    	/** Imposta il prompt interattivo per l'apertura del file */
 		    	fileOpener = new JFileChooser();
 		    	currentPath = new File(System.getProperty("user.dir"));
 		    	fileOpener.setCurrentDirectory(currentPath);
@@ -120,9 +120,6 @@ public class Menu
 		    		{
 						fis = new FileInputStream(fileOpener.getSelectedFile().getAbsolutePath());
 						ois = new ObjectInputStream(fis);
-						
-						for (int i = 0; i < dim; ++i) 
-							System.out.println(matrice[i]); 
 
 						/** ArrayList di appoggio usato per copiare la struttura dati principale dal file binario */
 						@SuppressWarnings("unchecked")
@@ -131,9 +128,6 @@ public class Menu
 						/** Assegnamento della struttura dati principale da quella di appoggio */
 						for (int i = 0; i < dim; ++i)
 							matrice[i] = newMatrice[i];
-						
-						for (int i = 0; i < dim; ++i)
-							System.out.println(matrice[i]);
 						
 						//TODO: commento da eliminare?
 						//e' necessario ripetere due volte la procedura affinche' vada a buon fine: 
@@ -165,9 +159,7 @@ public class Menu
 							for (int j = 1; j < dim; ++j) 
 							{
 								sottoMatrice.getDisplayer()[i][j] = sottoMatriceTmp.getDisplayer()[i][j];
-								System.out.print(sottoMatrice.getDisplayer()[i][j] + ",");
 							}
-							System.out.println();
 						}
 						ois2.close();
 		    		}

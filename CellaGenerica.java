@@ -41,15 +41,4 @@ public class CellaGenerica implements Serializable
 	{
 		return "";
 	}
-	
-	/**	Metodo utilizzato per evidenziare un comportamento polimorfico
-	 * 	@return Il valore 0
-	 */
-	public int getContCellInt() 
-	{
-		return 0;
-	}
-	
-
-
 }

@@ -13,7 +13,7 @@ public class CellaNumeri  extends CellaGenerica
 	/** Valore contenuto nella cella */
 	private int contCellInt;
 	
-	@Override
+	
 	public int getContCellInt()
 	{
 		return contCellInt;
