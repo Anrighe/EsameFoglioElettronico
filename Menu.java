@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 
-/**	Classe che gestisce le funzionalita' del menu
+/**	Gestisce le funzionalita' del menu
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
@@ -28,18 +28,31 @@ public class Menu
 	/** Gestisce il caricamento interattivo dei dati da file  */
 	private JFileChooser fileOpener;
 	
-	
+	/** Per salvare la struttura dati principale*/
 	private FileInputStream fis;
+	
+	/** Per salvare la struttura dati principale*/
 	private ObjectInputStream ois;
+	
+	/** Per salvare la struttura dati secondaria*/
 	private FileInputStream fis2;
+	
+	/** Per caricare la struttura dati secondaria*/
 	private ObjectInputStream ois2;
 	
 	/** Gestisce il salvataggio interattivo su file */
 	private JFileChooser fileSaver;
 	
+	/** Per salvare la struttura dati principale*/
 	private FileOutputStream fos;
+	
+	/** Per salvare la struttura dati principale*/
 	private ObjectOutputStream oos;
+	
+	/** Per salvare la struttura dati secondaria*/
 	private FileOutputStream fos2;
+	
+	/** Per salvare la struttura dati secondaria*/
 	private ObjectOutputStream oos2;
 	
 	/** Per apertura traccia d'esame */
@@ -128,14 +141,9 @@ public class Menu
 						/** Assegnamento della struttura dati principale da quella di appoggio */
 						for (int i = 0; i < dim; ++i)
 							matrice[i] = newMatrice[i];
-						
-						//TODO: commento da eliminare?
-						//e' necessario ripetere due volte la procedura affinche' vada a buon fine: 
-						//la prima volta dara' un out of bounds exception perche' non avendo celle selezionate
-						//getSelectedColumn e getSelectedRows ritornano -1
-						
-						/** Reset della cella selezionata per evitare l'ArrayOutOfBoundsException sollevato dal 
-						 * 	metodo setValueAt solleva un ArrayOutOfBoundsException */
+												
+						/** Reset della cella selezionata per evitare l'ArrayOutOfBoundsException che verrebbe
+						 * 	sollevato dal metodo setValueAt */
 						table.setColumnSelectionInterval(1, 1);
 						table.setRowSelectionInterval(0, 0);
 						
@@ -296,9 +304,7 @@ public class Menu
 					desktop.open(docPath);
 				} 
 		    	catch (IllegalArgumentException e1)
-		    	{
-		    		//TODO: aggiungere l'opzione per accedere a documentazione online
-		    		
+		    	{    		
 		    		/** Popup che segnala all'utente che non e' stata trovata la documentazione e 
 		    		 * 	in che percorso e' stata cercata */
 		    		e1.printStackTrace();

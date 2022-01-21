@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 /**	Cella di tipo generico.
- * 	<p>Per essere convertita al tipo <b>CellaGenerica</b>, una cella non deve nulla</p>
+ * 	<p>Per essere convertita al tipo <b>CellaGenerica</b>, una cella non deve contenere nulla</p>
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
@@ -14,7 +14,7 @@ public class CellaGenerica implements Serializable
 	/** Contenuto della cella */
 	private String contCell;
 	
-	/**	
+	/**	Ritorna il contenuto della cella, che per il tipo <b>CellaGenerica</b> consiste in una stringa vuota
 	 * 	@return Il contenuto della cella
 	 */
 	public String getContCell()

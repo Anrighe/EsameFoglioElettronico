@@ -97,7 +97,6 @@ public class CellaOperazione extends CellaGenerica
 		Matcher matcherOperazioniNumeri = patternOperazioniNumeri.matcher(text);
 		ritMatcherOperazioniNumeri = matcherOperazioniNumeri.find();
 		
-		
 		int plus = text.indexOf("+");
 		int minus = text.indexOf("-");
 		

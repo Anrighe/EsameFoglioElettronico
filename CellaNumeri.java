@@ -10,10 +10,10 @@ public class CellaNumeri  extends CellaGenerica
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** Valore contenuto nella cella */
+	/** Valore numerico contenuto nella cella */
 	private int contCellInt;
 	
-	
+	/* Ritorna il valore numerico inserito nella cella */
 	public int getContCellInt()
 	{
 		return contCellInt;

@@ -1,5 +1,5 @@
 /**	Cella che contiene testo.
- * 	<p>Per essere convertita al tipo <b>CellaNumeri</b>, una cella deve contenere almeno un carattere non numerico</p>
+ * 	<p>Per essere convertita al tipo <b>CellaTesto</b>, una cella deve contenere almeno un carattere non numerico</p>
  * 	@author Enrico Marras
  * 	@version Java SE Development Kit 17
  * 	<body style="background-color:#A4BEDA;"></body>
